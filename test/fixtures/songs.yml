@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyText
+  server_difficulty_name: MyString
+  server_difficulty_number: MyString
+  server_id: 1
+
+two:
+  name: MyText
+  server_difficulty_name: MyString
+  server_difficulty_number: MyString
+  server_id: 1

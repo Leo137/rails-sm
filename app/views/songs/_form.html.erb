@@ -1,0 +1,38 @@
+<%= simple_form_for @song, as: 'song_basic', wrapper_mappings: {
+    check_boxes: :vertical_radio_and_checkboxes,
+    radio_buttons: :vertical_radio_and_checkboxes,
+    file: :vertical_file_input,
+    boolean: :vertical_boolean
+  } do |f| %>
+  <% if @song.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@song.errors.count, "error") %> prohibited this song from being saved:</h2>
+
+      <ul>
+      <% @song.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group" >
+    <%= f.label :name %><br>
+    <%= f.text_field :name , class: 'form-control'%>
+  </div>
+  <div class="form-group">
+    <%= f.label :server_difficulty_name %><br>
+    <%= f.text_field :server_difficulty_name , class: 'form-control'%>
+  </div>
+  <div class="form-group">
+    <%= f.label :server_difficulty_number %><br>
+    <%= f.text_field :server_difficulty_number , class: 'form-control'%>
+  </div>
+  <div class="form-group">
+    <%= f.label :server_id %><br>
+    <%= f.number_field :server_id , class: 'form-control'%>
+  </div>
+ 
+  <%= f.button :submit, class: 'btn-default' %>
+  
+<% end %>

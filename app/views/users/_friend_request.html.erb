@@ -1,0 +1,21 @@
+<% if user_signed_in? %>
+	<% if current_user.id != @user.id %>
+		<% if current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).take == nil %>
+			<% if current_user.friends_request.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).take == nil %>
+				<%= form_tag(users_friend_request_path, method: "post") do %>
+				  <%= hidden_field_tag(:id, @user.id) %>
+				  <%= submit_tag("Agregar a amigos", class: "btn btn-default") %>
+				<% end %>
+			<% else %>
+				<% if current_user.friends_request.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).take != nil %>
+					<%= form_tag(users_friend_request_path, method: "delete", class: "simple_form") do %>
+					  <%= hidden_field_tag(:id, @user.id) %>
+					  <%= submit_tag "Cancelar solicitud", class: "btn btn-default" %>
+					<% end %>
+				<% end %>
+			<% end %>
+		<% else %>
+			<span class="label label-default">Amikos</span>
+		<% end %>
+	<% end %>
+<% end %>

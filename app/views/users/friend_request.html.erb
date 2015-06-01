@@ -1,0 +1,63 @@
+<h1>Requests</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @requests.each do |relationship| %>
+      <% relationship.user_one == current_user ? @friend = relationship.user_two : @friend = relationship.user_one %>
+      <tr>
+        <td><%= link_to @friend.name, controller: "users", action: "show", id: @friend.server_id %></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><% if relationship.user_one == current_user %>
+        		<%= form_tag(users_friend_request_path, method: "delete", class: "simple_form") do %>
+				  <%= hidden_field_tag(:id, @friend.id) %>
+				  <%= submit_tag "Cancelar solicitud", class: "btn btn-default pull-right" %>
+				<% end %>
+			<% else %>
+				<%= form_tag(users_friend_request_path, method: "put", class: "simple_form") do %>
+				  <%= hidden_field_tag(:id, @friend.id) %>
+				  <%= hidden_field_tag(:status, 1) %>
+				  <%= submit_tag "Aceptar solicitud", class: "btn btn-default pull-right" %>
+				<% end %>
+			<% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<h1>Friends</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @friends.each do |relationship| %>
+      <% relationship.user_one == current_user ? @friend = relationship.user_two : @friend = relationship.user_one %>
+      <tr>
+        <td><%= link_to @friend.name, controller: "users", action: "show", id: @friend.server_id %></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+    		<%= form_tag(users_friend_request_path, method: "delete", class: "simple_form") do %>
+			  <%= hidden_field_tag(:id, @friend.id) %>
+			  <%= submit_tag "Eliminar", class: "btn btn-default pull-right" %>
+			<% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

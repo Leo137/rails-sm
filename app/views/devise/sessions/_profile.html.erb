@@ -1,0 +1,6 @@
+<h2>Profile</h2>
+
+Hi <%= current_user.name %>!<br>
+<% @r = current_user.friends_two_req %>
+<%= link_to @r.length  == 0 ? "Friends" : "Friends(#{@r.length})",  users_friend_request_path %><br>
+<%= render "devise/shared/links" %>
