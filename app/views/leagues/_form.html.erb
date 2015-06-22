@@ -1,4 +1,9 @@
-<%= form_for(@league) do |f| %>
+<%= simple_form_for @league, as: 'league', wrapper_mappings: {
+    check_boxes: :vertical_radio_and_checkboxes,
+    radio_buttons: :vertical_radio_and_checkboxes,
+    file: :vertical_file_input,
+    boolean: :vertical_boolean
+  } do |f| %>
   <% if @league.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@league.errors.count, "error") %> prohibited this league from being saved:</h2>
@@ -11,19 +16,21 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.text_field :name , class: 'form-control'%>
   </div>
-  <div class="field">
+  <div class="form-group">
     <%= f.label :description %><br>
-    <%= f.text_field :description %>
+    <%= f.text_field :description , class: 'form-control'%>
   </div>
-  <div class="field">
-    <%= f.label :organizer_id %><br>
-    <%= f.text_field :organizer_id %>
+  <div class="form-group">
+    <%= f.label :start_date %><br>
+    <%= f.date_field :start_date , class: 'form-control'%>
   </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class="form-group">
+    <%= f.label :finish_date %><br>
+    <%= f.date_field :finish_date , class: 'form-control'%>
   </div>
+  <%= f.button :submit, class: 'btn-default' %>
 <% end %>

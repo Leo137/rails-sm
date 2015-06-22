@@ -6,21 +6,20 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Server difficulty name</th>
-      <th>Server difficulty number</th>
-      <th>Server</th>
-      <th colspan="3"></th>
+      <th>Difficulty name</th>
+      <th>Difficulty number</th>
+      <th>Server Id</th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @songs.each do |song| %>
       <tr>
-        <td><%= song.name %></td>
+        <td><%= link_to song.name, song %></td>
         <td><%= song.server_difficulty_name %></td>
         <td><%= song.server_difficulty_number %></td>
         <td><%= song.server_id %></td>
-        <td><%= link_to 'Show', song %></td>
         <td><%= link_to 'Edit', edit_song_path(song) %></td>
         <td><%= link_to 'Destroy', song, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

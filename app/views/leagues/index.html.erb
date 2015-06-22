@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
+<p id="notice"><%= params[:notice] %></p>
+<h1>Leagues</h1>
 
-<h1>Listing Leagues</h1>
-
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Name</th>
@@ -14,14 +14,34 @@
 
   <tbody>
     <% @leagues.each do |league| %>
-      <tr>
-        <td><%= league.name %></td>
-        <td><%= league.description %></td>
-        <td><%= league.organizer %></td>
-        <td><%= link_to 'Show', league %></td>
-        <td><%= link_to 'Edit', edit_league_path(league) %></td>
-        <td><%= link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <% if league.start_date != nil %>
+      <% @users = league.users %>
+        <tr>
+          <td><%= link_to league.name, league %></td>
+          <td><%= league.description %></td>
+          <td><% if league.organizer %><%= league.organizer.name %><% end %></td>
+          <td><% if league.organizer == current_user %><%= link_to 'Edit', edit_league_path(league) %><% end %></td>
+          <td><% if league.organizer == current_user %><%= link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' } %><% end %></td>
+          <td>
+            <% if current_user != nil %>
+              <% @user = @users.find(current_user.id) rescue nil %>
+              <% if @user == nil %>
+                <%= form_tag(leagues_join_league_path, method: "post") do %>
+                  <%= hidden_field_tag(:userid, current_user.id) %>
+                  <%= hidden_field_tag(:leagueid, league.id) %>
+                  <%= submit_tag("Join League", class: "btn btn-default pull-right") %>
+                <% end %>
+              <% else %>
+                <% if @user != nil %>
+                  <%= form_tag(league_path(league), method: "get") do %>
+                    <%= submit_tag("To League", class: "btn btn-default pull-right") %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

@@ -66,10 +66,61 @@ class UsersController < ApplicationController
     end
   end
 
+  def propose_song_show
+    @user = User.find_by id: params[:id]
+    @songs = Song.order(:name).page params[:page]
+    @relationship = current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
+    if @relationship != nil then
+      @relationship_songs = @relationship.songs
+    else
+      @relationship_songs = nil
+    end
+    render "propose_song"
+  end
+
+  def propose_song_post
+    @relationship_song = RelationshipSong.new
+    @user = User.find_by id: params[:userid]
+    @song = Song.find_by id: params[:songid]
+    @relationship = current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
+    @relationship_song.relationship = @relationship
+    @relationship_song.song = @song
+    respond_to do |format|
+      if @relationship_song.save then
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Cancion propuesta!' }
+      else
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Errores.' }
+      end
+    end
+  end
+
+  def propose_song_delete
+    
+    @user = User.find_by id: params[:userid]
+    @song = Song.find_by id: params[:songid]
+    @relationship = current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
+    @relationship_song = RelationshipSong.where("relationship_id =? AND song_id =?", @relationship.id, @song.id).first
+    respond_to do |format|
+      if @relationship_song.delete then
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Cancion eliminada!' }
+      else
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Errores.' }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find_by server_id: params[:id]
+      if current_user != nil && @user != current_user then
+        @relationship = current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
+        if @relationship != nil then
+          @relationship_songs = @relationship.songs
+        else
+          @relationship_songs = nil
+        end
+      end
     end
 
     def user_params

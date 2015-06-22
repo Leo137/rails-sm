@@ -1,8 +1,16 @@
 <p id="notice"><%= params[:notice] %></p>
 
-<%= render 'friend_request' %>
-<br>
+
 <p>
   <strong>Name:</strong>
-  <%= @user.name %>
+  <%= @user.name %><br>
+  <%= image_tag(ApplicationHelper.get_avatar_user(@user.name,1), :alt => "Profile image") %>
 </p>
+<%= render 'friend_request' %>
+<%= render 'friend_songs' %>
+<% if user_signed_in? && @relationship != nil %>
+	<%= form_tag(users_propose_song_path, method: "get") do %>
+		<%= hidden_field_tag(:id, @user.id) %>
+	  <%= submit_tag("Proponer cancion", class: "btn btn-default") %>
+	<% end %>
+<% end %>

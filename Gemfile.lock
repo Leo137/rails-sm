@@ -38,6 +38,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    anemone (0.7.2)
+      nokogiri (>= 1.3.0)
+      robotex (>= 1.0.0)
     arel (6.0.0)
     autoprefixer-rails (5.1.11)
       execjs
@@ -130,6 +133,8 @@ GEM
       json (~> 1.4)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    robotex (1.0.0)
+    robots (0.10.1)
     sass (3.4.13)
     sass-rails (5.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -175,6 +180,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_record_union
+  anemone
   bootstrap-sass
   byebug
   cancancan (~> 1.10)
@@ -184,7 +190,9 @@ DEPENDENCIES
   jquery-rails
   kaminari
   kaminari-bootstrap (~> 3.0.1)
+  nokogiri
   rails (= 4.2.1)
+  robots
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   simple_form

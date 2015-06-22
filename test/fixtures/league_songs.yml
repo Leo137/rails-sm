@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  factor: 9.99
+  song_id: 
+  league_id: 
+
+two:
+  factor: 9.99
+  song_id: 
+  league_id: 

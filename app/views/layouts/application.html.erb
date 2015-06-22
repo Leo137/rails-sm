@@ -25,6 +25,7 @@
         <!-- <li><a href="#">About</a></li>
         <li><a href="#">Songs</a></li> -->
         <li <% if controller_name == 'users' %>class="active"<% end %>><%= link_to 'Users',  users_path %></li>
+        <li <% if controller_name == 'leagues' %>class="active"<% end %>><%= link_to 'Leagues',  leagues_path %></li>
       </ul>
     </div>
   </div>

@@ -11,7 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150531231805) do
+ActiveRecord::Schema.define(version: 20150622084014) do
+
+  create_table "contestants", force: :cascade do |t|
+    t.integer  "status"
+    t.integer  "user_id"
+    t.integer  "league_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "contestants", ["league_id"], name: "index_contestants_on_league_id"
+  add_index "contestants", ["user_id"], name: "index_contestants_on_user_id"
+
+  create_table "league_songs", force: :cascade do |t|
+    t.decimal  "factor"
+    t.integer  "song_id"
+    t.integer  "league_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "league_songs", ["league_id"], name: "index_league_songs_on_league_id"
+  add_index "league_songs", ["song_id"], name: "index_league_songs_on_song_id"
 
   create_table "leagues", force: :cascade do |t|
     t.string   "name"
@@ -19,9 +41,21 @@ ActiveRecord::Schema.define(version: 20150531231805) do
     t.integer  "organizer_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.datetime "start_date"
+    t.datetime "finish_date"
   end
 
   add_index "leagues", ["organizer_id"], name: "index_leagues_on_organizer_id"
+
+  create_table "relationship_songs", force: :cascade do |t|
+    t.integer  "relationship_id"
+    t.integer  "song_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "relationship_songs", ["relationship_id"], name: "index_relationship_songs_on_relationship_id"
+  add_index "relationship_songs", ["song_id"], name: "index_relationship_songs_on_song_id"
 
   create_table "relationships", force: :cascade do |t|
     t.integer  "user_one_id"
@@ -44,6 +78,40 @@ ActiveRecord::Schema.define(version: 20150531231805) do
     t.datetime "updated_at",               null: false
   end
 
+  add_index "songs", ["server_difficulty_name", "server_difficulty_number", "server_id"], name: "difficulty_index", unique: true
+
+  create_table "user_scores", force: :cascade do |t|
+    t.integer  "server_marvelous"
+    t.integer  "server_perfects"
+    t.integer  "server_greats"
+    t.integer  "server_goods"
+    t.integer  "server_bads"
+    t.integer  "server_misses"
+    t.integer  "server_ok"
+    t.integer  "server_ng"
+    t.decimal  "server_percent"
+    t.integer  "server_grade"
+    t.integer  "server_migs_dp_obtained"
+    t.integer  "server_migs_dp_max"
+    t.datetime "server_date"
+    t.integer  "user_id"
+    t.integer  "song_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "server_id"
+    t.integer  "server_toasty_count"
+    t.integer  "server_max_combo"
+    t.integer  "server_mines_hit"
+    t.integer  "server_mines_missed"
+    t.integer  "server_score"
+    t.integer  "server_timing"
+    t.string   "server_mods"
+  end
+
+  add_index "user_scores", ["server_id"], name: "index_user_scores_on_server_id", unique: true
+  add_index "user_scores", ["song_id"], name: "index_user_scores_on_song_id"
+  add_index "user_scores", ["user_id"], name: "index_user_scores_on_user_id"
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -63,5 +131,6 @@ ActiveRecord::Schema.define(version: 20150531231805) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["server_id"], name: "index_users_on_server_id", unique: true
 
 end

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :songs
-  resources :leagues
+  
+  get 'songs/update_score' => 'songs#update_score_get'
   resources :songs
   devise_for :users, :controllers => { registrations: 'registrations' }
   # The priority is based upon order of creation: first created -> highest priority.
@@ -69,8 +69,20 @@ Rails.application.routes.draw do
   post 'users/friend_request' => 'users#friend_request_post'
   delete 'users/friend_request' => 'users#friend_request_delete'
   put 'users/friend_request' => 'users#friend_request_put'
+  get 'users/propose_song' => 'users#propose_song_show'
+  get 'users/propose_song/:page' => 'users#propose_song_show'
+  post 'users/propose_song' => 'users#propose_song_post'
+  delete 'users/propose_song' => 'users#propose_song_delete'
   get 'users/:id' => 'users#show'
 
+  post 'leagues/join_league' => 'leagues#join_league_post'
+  delete 'leagues/join_league' => 'leagues#join_league_delete'
+  get 'leagues/add_song' => 'leagues#add_song_show'
+  get 'leagues/add_song/:page' => 'leagues#add_song_show'
+  post 'leagues/add_song' => 'leagues#add_song_post'
+  put 'leagues/add_song' => 'leagues#add_song_put'
+  delete 'leagues/add_song' => 'leagues#add_song_delete'
+  resources :leagues
   
   
 end

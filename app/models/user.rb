@@ -37,4 +37,6 @@ class User < ActiveRecord::Base
   def friends_all
    	friends_one_all.union(friends_two_all)
   end
+
+  has_many :user_scores
 end

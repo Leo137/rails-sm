@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  server_marvelous: 1
+  server_perfects: 1
+  server_greats: 1
+  server_goods: 1
+  server_bads: 1
+  server_misses: 1
+  server_ok: 1
+  server_ng: 1
+  server_percent: 9.99
+  server_grade: 1
+  server_migs_dp_obtained: 1
+  server_migs_dp_max: 1
+  server_date: 2015-06-21
+  user_id: 
+  song_id: 
+
+two:
+  server_marvelous: 1
+  server_perfects: 1
+  server_greats: 1
+  server_goods: 1
+  server_bads: 1
+  server_misses: 1
+  server_ok: 1
+  server_ng: 1
+  server_percent: 9.99
+  server_grade: 1
+  server_migs_dp_obtained: 1
+  server_migs_dp_max: 1
+  server_date: 2015-06-21
+  user_id: 
+  song_id: 
