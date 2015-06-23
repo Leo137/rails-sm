@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150622084014) do
+ActiveRecord::Schema.define(version: 20150622194048) do
 
   create_table "contestants", force: :cascade do |t|
     t.integer  "status"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(version: 20150622084014) do
     t.datetime "updated_at"
     t.string   "name"
     t.integer  "server_id"
+    t.boolean  "admin"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

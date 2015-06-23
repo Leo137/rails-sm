@@ -6,10 +6,9 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Difficulty name</th>
-      <th>Difficulty number</th>
+      <th>Difficulty</th>
       <th>Server Id</th>
-      <th colspan="2"></th>
+      <th colspan="1"></th>
     </tr>
   </thead>
 
@@ -17,16 +16,21 @@
     <% @songs.each do |song| %>
       <tr>
         <td><%= link_to song.name, song %></td>
-        <td><%= song.server_difficulty_name %></td>
-        <td><%= song.server_difficulty_number %></td>
+        <td><%= song.server_difficulty_name %>(<%= song.server_difficulty_number %>)</td>
         <td><%= song.server_id %></td>
-        <td><%= link_to 'Edit', edit_song_path(song) %></td>
-        <td><%= link_to 'Destroy', song, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% if can? :manage, @songs %>
+          <td><%= link_to 'Edit', edit_song_path(song) %></td>
+          <td><%= link_to 'Destroy', song, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% else %>
+          <td></td>
+          <td></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Song', new_song_path %>
+<% if can? :manage, @songs %>
+  <%= link_to 'New Song', new_song_path %>
+<% end %>

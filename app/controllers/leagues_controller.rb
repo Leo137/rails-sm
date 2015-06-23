@@ -1,4 +1,5 @@
 class LeaguesController < ApplicationController
+  load_and_authorize_resource 
   before_action :set_league, only: [:show, :edit, :update, :destroy, :add_song_show]
 
   # GET /leagues
@@ -10,6 +11,7 @@ class LeaguesController < ApplicationController
   # GET /leagues/1
   # GET /leagues/1.json
   def show
+    render "show"
   end
 
   # GET /leagues/new
@@ -66,7 +68,7 @@ class LeaguesController < ApplicationController
   def join_league_post
     @user = User.find_by id: params[:userid]
     @league = League.find_by id: params[:leagueid]
-    if Time.now > @league.start_date then
+    if Time.now.in_time_zone > @league.start_date then
       redirect_to action: "index", notice: 'Error: La liga ya empezo.'
       return
     end
@@ -85,7 +87,7 @@ class LeaguesController < ApplicationController
   def join_league_delete
     @user = User.find_by id: params[:userid]
     @league = League.find_by id: params[:leagueid]
-    if Time.now >= @league.finish_date then
+    if Time.now.in_time_zone >= @league.finish_date then
       redirect_to action: "show", id: @league, notice: 'La liga ya ha terminado, no puedes salirte.'
       return
     end

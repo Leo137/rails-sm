@@ -23,8 +23,16 @@ module ApplicationHelper
 		return server_url + "index.php?page=match&mid="
 	end
 
+	def self.song_url
+		return server_url + "index.php?page=song&sid="
+	end
+
 	def self.avatar_url
 		return server_url + "images/avatars/"
+	end
+
+	def self.song_img_url
+		return server_url + "images/avatars-songs/"
 	end
 
 	def self.grade_aaaa_url
@@ -64,7 +72,12 @@ module ApplicationHelper
 	end
 
     def self.get_avatar_user(name,size)
-	  	if name != nil && FileTest.exist?(avatar_url + name + "-" + "medium.png") then
+    	uri = URI(avatar_url + name + "-" + "medium.png")
+		request = Net::HTTP.new uri.host
+		response= request.request_head uri.path
+		exists = response.code.to_i == 200
+
+	  	if name != nil && exists then
 			if size == 1 || size == "medium" then
 				return avatar_url + name + "-" + "medium.png"
 			else
@@ -162,5 +175,37 @@ module ApplicationHelper
 		end
 
 		return grade_unknown_url
+	end
+
+	def self.get_song_server_url(song_id)
+		return song_url + song_id.to_s
+	end
+
+	def self.get_profile_server_url(user_id)
+		return profile_url + user_id.to_s
+	end
+
+	def self.get_match_server_url(match_id)
+		return match_url + match_id.to_s
+	end
+
+	def self.get_song_server_img(song_id,size)
+		uri = URI(song_img_url + song_id.to_s + "-" + "medium.png")
+		request = Net::HTTP.new uri.host
+		response= request.request_head uri.path
+		exists = response.code.to_i == 200
+	  	if name != nil && exists then
+			if size == 1 || size == "medium" then
+				return song_img_url + song_id.to_s + "-" + "medium.png"
+			else
+				return song_img_url + song_id.to_s + "-" + "small.png"
+			end
+	  	else
+	  		if size == 1 || size == "medium" then
+				return avatar_url + "default-medium.png"
+			else
+				return avatar_url + "default-small.png"
+			end
+	  	end
 	end
 end

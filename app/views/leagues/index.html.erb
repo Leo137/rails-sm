@@ -47,5 +47,7 @@
 </table>
 
 <br>
+<% if can? :manage, @leagues %>
+  <%= link_to 'New League', new_league_path %>
+<% end %>
 
-<%= link_to 'New League', new_league_path %>

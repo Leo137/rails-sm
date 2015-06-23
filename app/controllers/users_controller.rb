@@ -1,11 +1,12 @@
 class UsersController < ApplicationController
+  load_and_authorize_resource find_by: :server_id
   before_action :set_user, only: [:show]
 
   # GET /users
   # GET /users.json
   def index
     @order = 'name'
-    @users = User.order(:name).page params[:page]
+    @users = User.order("LOWER(name)").page params[:page]
   end
 
   def index_rank
@@ -27,7 +28,7 @@ class UsersController < ApplicationController
 
   def friend_request_post
     @relationship = Relationship.new
-    @user = User.find_by id: params[:id]
+    @user = User.find_by server_id: params[:id]
     @relationship.user_one_id = current_user.id
     @relationship.user_two_id = @user.id
     @relationship.status = 0
@@ -41,7 +42,7 @@ class UsersController < ApplicationController
   end
 
   def friend_request_delete
-    @user = User.find_by id: params[:id]
+    @user = User.find_by server_id: params[:id]
     @relationship = current_user.friends_all.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
     @status = @relationship.status
     respond_to do |format|
@@ -56,7 +57,7 @@ class UsersController < ApplicationController
   end
 
   def friend_request_put
-    @user = User.find_by id: params[:id]
+    @user = User.find_by server_id: params[:id]
     @relationship = current_user.friends_request.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
     @relationship.status = 1
     respond_to do |format|
@@ -67,7 +68,7 @@ class UsersController < ApplicationController
   end
 
   def propose_song_show
-    @user = User.find_by id: params[:id]
+    @user = User.find_by server_id: params[:id]
     @songs = Song.order(:name).page params[:page]
     @relationship = current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
     if @relationship != nil then

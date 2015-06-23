@@ -15,6 +15,45 @@
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";
-body { padding-top: 60px; }
+body { padding-top: 10px; }
 .btn-link {  padding: 0px; vertical-align: baseline; margin-top: -2px; }
-.btn-default {  vertical-align: baseline; margin-top: -6px; }
+.btn-default {  vertical-align: baseline; margin-top: -6px; margin-right: 3px; }
+.btn-primary {  vertical-align: baseline; margin-top: -6px; margin-right: 3px; }
+
+.image { @include size(250px, 200px); }
+.image_user { @include size(150px, 150px); }
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+  background-color: #eeeeee;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f5f5f5;
+}
+.footer > .container {
+  padding-top: 15px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.background { @include gradient-vertical($start-color: rgba(1,1,1,.5), $end-color: rgba(255,255,255,.5));}
+.leaguecell{
+  width: 82px;
+}
+.leaguecellname{
+  width: 40px;
+}
+.profile{
+  @media screen and (min-width: 992px) {
+      position:fixed;
+  }
+  width: 200px;
+}

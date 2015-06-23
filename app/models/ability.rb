@@ -2,6 +2,27 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    
+    if user != nil then
+        if user.admin?
+          can :manage, :all
+        else
+          can :update_score_get, :all
+          can :friend_request_post, :all
+          can :friend_request_show, :all
+          can :friend_request_put, :all
+          can :friend_request_delete, :all
+          can :propose_song_show, :all
+          can :propose_song_post, :all
+          can :propose_song_delete, :all
+          can :join_league_post, :all
+          can :join_league_delete, :all
+        end
+    end
+    user ||= User.new # guest user (not logged in)
+    can :index, :all
+    can :show, :all
+    can :index_rank, :all
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

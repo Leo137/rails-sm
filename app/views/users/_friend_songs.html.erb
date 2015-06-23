@@ -17,18 +17,18 @@
 		<h3>Wins <%= @your_points %> / Loses <%= @friend_points %></h3>
 		<table class="table">
 		  <thead>
-		    <tr>
+		    <tr class="row">
 		      <th>Name</th>
 		      <th>Your Score</th>
 		      <th><%= @user.name %>'s Score</th>
-		      <th colspan="2"></th>
+		      <th colspan="1"></th>
 		    </tr>
 		  </thead>
 
 		  <tbody>
 		    <% @relationship_songs.each do |song| %>
-		    	<% @your_score = song.user_scores.where("user_id =?", current_user.id).order(:server_migs_dp_obtained).first %>
-		    	<% @friend_score = song.user_scores.where("user_id =?", @user.id).order(:server_migs_dp_obtained).first %>
+		    	<% @your_score = song.user_scores.where("user_id =?", current_user.id).order(server_migs_dp_obtained: :desc).first %>
+		    	<% @friend_score = song.user_scores.where("user_id =?", @user.id).order(server_migs_dp_obtained: :desc).first %>
 		    	<% if (@friend_score == nil && @your_score != nil ) || @friend_score != nil && @your_score != nil && @your_score.server_percent > @friend_score.server_percent %>
 		    		<% result = 1 %>
 		    	<% end %>
@@ -40,30 +40,35 @@
 		    	<% if (@your_score == nil && @friend_score == nil ) %>
 		    		<% result = -1 %>
 		    	<% end %>
-		      <tr>
-		        <td><%= link_to song.name, song %>
+		      <tr class="row">
+		        <td class="col-md-2"><%= link_to song.name, song %>
 		        	<% if result == 1 %>
-		        		<span class="label label-success pull-right">Win</span>
+		        		<div class="label label-success pull-right">Win</div>
 		        	<% end %>
 		        	<% if result == 0 %>
-		        		<span class="label label-danger pull-right">Lost</span>
+		        		<div class="label label-danger pull-right">Lost</div>
 		        	<% end %>
 		        	<% if result == -1 %>
-		        		<span class="label label-default pull-right">Tie</span>
+		        		<div class="label label-default pull-right">Tie</div>
 		        	<% end %>
 		        </td>
 		        <% if @your_score != nil %>
-		        	<td><%= @your_score.server_percent %>% <%= @your_score.server_marvelous %>-<%= @your_score.server_perfects %>-<%= @your_score.server_greats %>-<%= @your_score.server_goods %>-<%= @your_score.server_bads %>-<%= @your_score.server_misses %> (Holds:<%= @your_score.server_ok %>/<%= @your_score.server_ok+@your_score.server_ng %>)</td>
+		        	<td class="col-md-4">
+		        		<%= image_tag(ApplicationHelper.get_grade_image(@your_score.server_grade), :alt => "", class: "pull-right") %>
+		        		<%= @your_score.server_percent %>% <%= @your_score.server_marvelous %>-<%= @your_score.server_perfects %>-<%= @your_score.server_greats %>-<%= @your_score.server_goods %>-<%= @your_score.server_bads %>-<%= @your_score.server_misses %> (Holds:<%= @your_score.server_ok %>/<%= @your_score.server_ok+@your_score.server_ng %>)
+		        	</td>
 		        <% else %>
-		        	<td>No score</td>
+		        	<td class="col-md-4">No score</td>
 		        <% end %>
 		        <% if @friend_score != nil %>
-		        	<td><%= @friend_score.server_percent %>% <%= @friend_score.server_marvelous %>-<%= @friend_score.server_perfects %>-<%= @friend_score.server_greats %>-<%= @friend_score.server_goods %>-<%= @friend_score.server_bads %>-<%= @friend_score.server_misses %> (Holds:<%= @friend_score.server_ok %>/<%= @friend_score.server_ok+@friend_score.server_ng %>)</td>
+		        	<td class="col-md-4">
+		        		<%= image_tag(ApplicationHelper.get_grade_image(@friend_score.server_grade), :alt => "", class: "pull-right") %>
+		        		<%= @friend_score.server_percent %>% <%= @friend_score.server_marvelous %>-<%= @friend_score.server_perfects %>-<%= @friend_score.server_greats %>-<%= @friend_score.server_goods %>-<%= @friend_score.server_bads %>-<%= @friend_score.server_misses %> (Holds:<%= @friend_score.server_ok %>/<%= @friend_score.server_ok+@friend_score.server_ng %>)
+		        	</td>
 		        <% else %>
-		        	<td>No score</td>
+		        	<td class="col-md-4">No score</td>
 		        <% end %>
-		        <td><%= link_to 'Edit', edit_song_path(song) %></td>
-		        <td><%= form_tag(users_propose_song_path, method: "delete") do %>
+		        <td class="col-md-2"><%= form_tag(users_propose_song_path, method: "delete") do %>
 						<%= hidden_field_tag(:userid, @user.id) %>
 						<%= hidden_field_tag(:songid, song.id) %>
 					  	<%= submit_tag("Remover", class: "btn btn-link") %>
