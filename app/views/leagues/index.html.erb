@@ -48,6 +48,8 @@
 
 <br>
 <% if can? :manage, @leagues %>
-  <%= link_to 'New League', new_league_path %>
+  <%= form_tag(new_league_path, method: "get") do %>
+      <%= submit_tag("New League", class: "btn btn-default pull-right pull-left") %>
+  <% end %>
 <% end %>
 

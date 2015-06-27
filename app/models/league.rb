@@ -5,4 +5,5 @@ class League < ActiveRecord::Base
 	has_many :users, through: :contestants
 	has_many :league_songs
 	has_many :songs, through: :league_songs
+	has_many :comments,class_name:"Comment",foreign_key: "league"
 end

@@ -1,0 +1,7 @@
+<p id="notice"><%= notice %></p>
+<%= render 'song_header' %>
+<ul class="nav nav-tabs">
+  <li role="presentation"><%= link_to "Best Scores", controller: "songs", action: "show", id: @song.id %></li>
+  <li role="presentation" class="active"><a href="#">Mensajes</a></li>
+</ul>
+<%= render 'publish_comment' %>

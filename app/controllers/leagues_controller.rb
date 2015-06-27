@@ -1,3 +1,4 @@
+require 'date'
 class LeaguesController < ApplicationController
   load_and_authorize_resource 
   before_action :set_league, only: [:show, :edit, :update, :destroy, :add_song_show]
@@ -62,6 +63,42 @@ class LeaguesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to leagues_url, notice: 'League was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def publish_comment_show
+    @comments = @league.comments.order(created_at: :desc).page params[:page];
+    render "publish_comment"
+  end
+
+  def publish_comment_post
+    comment = Comment.new
+    comment.author = current_user;
+    comment.league = @league;
+    comment.comment = params[:message];
+    respond_to do |format|
+      if comment.save then
+        format.html { redirect_to action: "publish_comment_show", id: @league.id, notice: 'Comentario creado' }
+      else
+        format.html { redirect_to action: "publish_comment_show", id: @league.id, notice: 'Errores.' }
+      end
+    end
+  end
+
+  def publish_comment_delete
+    # unimplemented
+    @relationship_song = RelationshipSong.new
+    @user = User.find_by id: params[:userid]
+    @song = Song.find_by id: params[:songid]
+    @relationship = current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
+    @relationship_song.relationship = @relationship
+    @relationship_song.song = @song
+    respond_to do |format|
+      if @relationship_song.save then
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Cancion propuesta!' }
+      else
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Errores.' }
+      end
     end
   end
 
@@ -149,10 +186,15 @@ class LeaguesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_league
       @league = League.find(params[:id])
+      @start_date = @league.start_date.in_time_zone.strftime('%d/%m/%Y %I:%M %p')
+      @finish_date = @league.finish_date.in_time_zone.strftime('%d/%m/%Y %I:%M %p')
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def league_params
+      format = "%m/%d/%Y%n%l:%M%n%p"
+      params[:league][:start_date] = DateTime.strptime(params[:league][:start_date], format)
+      params[:league][:finish_date] = DateTime.strptime(params[:league][:finish_date],format)
       params.require(:league).permit(:name, :description, :start_date, :finish_date)
     end
 end

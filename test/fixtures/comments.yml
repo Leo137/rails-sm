@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  author: 1
+  comment: MyText
+  user: 1
+  song: 1
+  league: 1
+
+two:
+  author: 1
+  comment: MyText
+  user: 1
+  song: 1
+  league: 1

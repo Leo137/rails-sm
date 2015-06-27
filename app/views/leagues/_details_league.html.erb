@@ -1,0 +1,121 @@
+<% if @league.users.count > 0 %>
+<h2>Contestants</h2>
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th>Name</th>
+	      <th colspan="3"></th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	    <% @league.users.each do |user| %>
+	      <tr>
+	        <td><%= link_to user.name, controller: "users", action: "show", id: user.server_id %></td>
+	      </tr>
+	    <% end %>
+	  </tbody>
+	</table>
+<% else %>
+	<h2>No Contestants yet</h2>
+<% end %>
+
+<% if @league.songs.count > 0 %>
+<h2>Scores</h2>
+	<table data-toggle="table">
+		  <thead>
+		    <tr>
+		      <th>#</th>
+		      <th>Usuario</th>
+		      <% @league.songs.each do |song| %>
+		      	<th><%= link_to song.name, controller: "songs", action: "show", id: song.id %></th>
+		      <% end %>
+		      <th>Puntos totales</th>
+		      <th colspan="3"></th>
+		    </tr>
+		  </thead>
+		  <% users_ordered = [] %>
+		  <% @league.users.each do |user| %>
+		  	<% users_ordered = users_ordered.push({"user" => user, "score" => 0.0}) %>
+		  	<% @league.songs.each do |song| %>
+		  		<% league_song = @league.league_songs.where("song_id =?", song.id).first %>
+		  		<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
+		  		<% if score != nil %>
+		  			<% (users_ordered[users_ordered.length-1])["score"] = (users_ordered[users_ordered.length-1])["score"] + (league_song.factor * score.server_migs_dp_obtained).round(2) %>
+		  		<% end %>
+		  	<% end %>
+		  	<% users_ordered.sort! { |x,y| y["score"] <=> x["score"] } %>
+		  <% end %>
+		  <tbody style="height:110px">
+		  	<% i = 1 %>
+		    <% users_ordered.each do |u| %>
+
+		      <tr id="tr-id-1" class="tr-class-1">
+		      	<td id="td-id-1" class="td-class-1">
+		    		<%= i %>
+		    		<% i = i + 1 %>
+		    	</td>
+		      	<% user = u["user"] %>
+		      	<td id="td-id-1" class="td-class-1"><div class="center-block leaguecellname"><%= link_to user.name, controller: "users", action: "show", id: user.server_id %></div></td>
+		      	<% @league.songs.each do |song| %>
+		      		<% league_song = @league.league_songs.where("song_id =?", song.id).first %>
+			      	<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
+			      	<% if score != nil %>
+			      		<td id="td-id-2" class="td-class-2">
+			      			<div class="center-block leaguecell">
+			      				<%= image_tag(ApplicationHelper.get_grade_image(score.server_grade), :alt => "", class: "center-block") %>
+			      				<center><%= link_to score.server_percent.round(1).to_s+"%", ApplicationHelper.get_match_server_url(score.server_id) %>
+			      				</center>
+			      				<small class="label label-default center-block">(<%=(league_song.factor * score.server_migs_dp_obtained).round(2) %>pts)</small>
+			      			
+			      			</div>
+			      		</td>
+			      	<% else %>
+			      		<td id="td-id-1" class="td-class-1">--</td>
+			      	<% end %>
+		      	<% end %>
+		      	<td id="td-id-1" class="td-class-1"><%= u["score"] %></td>
+		      </tr>
+		    <% end %>
+		  </tbody>
+	</table>
+	</br>
+<% else %>
+	<h2>No Songs yet</h2>
+<% end %>
+
+
+
+<% if @league.organizer == current_user %>
+	<%= form_tag(edit_league_path(@league), method: "get") do %>
+	  	<%= submit_tag("Administrar liga", class: "btn btn-default pull-left") %>
+	<% end %>
+	<span></span>
+	<%= form_tag(leagues_add_song_path, method: "get") do %>
+		<%= hidden_field_tag(:id, @league.id) %>
+	  	<%= submit_tag("Administrar canciones", class: "btn btn-default pull-left") %>
+	<% end %>
+<% end %>
+
+<% @user = @league.users.find(current_user.id) rescue nil %>
+<% if current_user != nil %>
+	<% if @user == nil %>
+	    <%= form_tag(leagues_join_league_path, method: "post") do %>
+		    <%= hidden_field_tag(:userid, current_user.id) %>
+		    <%= hidden_field_tag(:leagueid, @league.id) %>
+		    <%= submit_tag("Join League", class: "btn btn-default pull-right") %>
+		<% end %>
+	<% else %>
+		<% if Time.now.in_time_zone < @league.finish_date %>
+			<%= form_tag(leagues_join_league_path, method: "delete") do %>
+			    <%= hidden_field_tag(:userid, current_user.id) %>
+			    <%= hidden_field_tag(:leagueid, @league.id) %>
+			    <%= submit_tag("Leave League", class: "btn btn-default pull-right") %>
+			<% end %>
+		<% end %>
+	<% end %>
+<% else %>
+	<div class="container jumbotron">
+		<center><h3>Debes estar logeado para unirte a las ligas</h3></center>
+	</div>
+<% end %>

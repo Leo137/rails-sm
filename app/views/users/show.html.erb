@@ -1,24 +1,9 @@
 <p id="notice"><%= params[:notice] %></p>
-<table class="table">
-	<tr class="row">
-		<td class="col-md-10">
-			<h1>
-			  <%= @user.name %>
-			</h1>
-			<h4>
-				<div class="btn btn-default"><%= link_to 'View on SMO', ApplicationHelper.get_profile_server_url(@user.server_id) %></div>
-			</h4>
-		</td>
-		<td class="col-md-2">
-			<%= image_tag(ApplicationHelper.get_avatar_user(@user.name,1), :alt => "Profile Image", class: "image_user pull-right") %>
-		</td>
-	</tr>
-</table>
-<%= render 'friend_request' %>
+
+<%= render 'profile_header' %>
+
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a href="#">Perfil</a></li>
+  <li role="presentation"><%= link_to "Mensajes", controller: "users", action: "publish_comment_show", id: @user.server_id %></li>
+</ul>
 <%= render 'friend_songs' %>
-<% if user_signed_in? && @relationship != nil %>
-	<%= form_tag(users_propose_song_path, method: "get") do %>
-		<%= hidden_field_tag(:id, @user.server_id) %>
-	  <%= submit_tag("Proponer cancion", class: "btn btn-default") %>
-	<% end %>
-<% end %>

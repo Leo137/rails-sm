@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   
   get 'songs/update_score' => 'songs#update_score_get'
+  get 'songs/publish_comment' => 'songs#publish_comment_show'
+  get 'songs/publish_comment/:page' => 'songs#publish_comment_show'
+  post 'songs/publish_comment' => 'songs#publish_comment_post'
+  delete 'songs/publish_comment' => 'songs#publish_comment_delete'
   resources :songs
   devise_for :users, :controllers => { registrations: 'registrations' }
   # The priority is based upon order of creation: first created -> highest priority.
@@ -73,6 +77,10 @@ Rails.application.routes.draw do
   get 'users/propose_song/:page' => 'users#propose_song_show'
   post 'users/propose_song' => 'users#propose_song_post'
   delete 'users/propose_song' => 'users#propose_song_delete'
+  get 'users/publish_comment' => 'users#publish_comment_show'
+  get 'users/publish_comment/:page' => 'users#publish_comment_show'
+  post 'users/publish_comment' => 'users#publish_comment_post'
+  delete 'users/publish_comment' => 'users#publish_comment_delete'
   get 'users/:id' => 'users#show'
 
   post 'leagues/join_league' => 'leagues#join_league_post'
@@ -82,6 +90,10 @@ Rails.application.routes.draw do
   post 'leagues/add_song' => 'leagues#add_song_post'
   put 'leagues/add_song' => 'leagues#add_song_put'
   delete 'leagues/add_song' => 'leagues#add_song_delete'
+  get 'leagues/publish_comment' => 'leagues#publish_comment_show'
+  get 'leagues/publish_comment/:page' => 'leagues#publish_comment_show'
+  post 'leagues/publish_comment' => 'leagues#publish_comment_post'
+  delete 'leagues/publish_comment' => 'leagues#publish_comment_delete'
   resources :leagues
   
   

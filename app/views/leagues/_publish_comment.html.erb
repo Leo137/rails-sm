@@ -1,0 +1,37 @@
+<h2>Comentarios</h2>
+<table class="table">
+  <tbody>
+  	<% @comments.each do |comment| %>
+  		<tr class="row">
+  			<td class="col-sm-1">
+				<%= image_tag(ApplicationHelper.get_avatar_user(comment.author.name,1), :alt => "Profile Image", class: "image_user_small pull-left") %>
+			</td>
+  			<td class="col-md-11">
+  				<%= link_to comment.author.name, controller: "users", action: "show", id: comment.author.server_id %>(<%= comment.created_at.strftime('%I:%M %p')%>): <%= comment.comment %>
+  			</td>
+  		</tr>
+  	<% end %>
+  </tbody>
+</table>
+<%= paginate @comments %>
+<% if can? :publish_comment_post, @league %>
+	<table class="table">
+		<tbody>
+			<tr class="row">
+				<td class="col-sm-1">
+					<%= image_tag(ApplicationHelper.get_avatar_user(current_user.name,1), :alt => "Profile Image", class: "image_user_small pull-left") %>
+				</td>
+				<td class="col-sm-2">
+					<%= form_tag(leagues_publish_comment_path, method: "post") do %>
+					<%= hidden_field_tag(:id, @league.id) %>
+					<%= text_area_tag :message, '', size: "40x2", placeholder: "Escribe un comentario...", class: "input-group center pull-left" %>
+					</br></br></br>
+				    <%= submit_tag("Enviar", class: "btn btn-default pull-left") %>
+				    <% end %>
+				</td>
+				<td class="col-sm-9">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+<% end %>

@@ -78,4 +78,16 @@
 		  </tbody>
 		</table>
 	<% end %>
+
+	<% if user_signed_in? && @relationship != nil %>
+		<%= form_tag(users_propose_song_path, method: "get") do %>
+			<%= hidden_field_tag(:id, @user.server_id) %>
+		  <%= submit_tag("Proponer cancion", class: "btn btn-default") %>
+		<% end %>
+	<% end %>
+
+<% else %>
+	<div class="container jumbotron">
+		<center><h3>Debes estar logeado para ver mas datos de <%= @user.name %></h3></center>
+	</div>
 <% end %>

@@ -1,3 +1,10 @@
+<%= javascript_tag do %>
+  <% if @start_date != nil && @finish_date != nil %>
+  window.start_date = moment("<%= @start_date %>","DD/MM/YYYY hh:mm A");
+  window.finish_date = moment("<%= @finish_date %>","DD/MM/YYYY hh:mm A");
+  console.log('<%= @finish_date %>');
+  <% end %>
+<% end %>
 <%= simple_form_for @league, as: 'league', wrapper_mappings: {
     check_boxes: :vertical_radio_and_checkboxes,
     radio_buttons: :vertical_radio_and_checkboxes,
@@ -25,12 +32,46 @@
     <%= f.text_field :description , class: 'form-control'%>
   </div>
   <div class="form-group">
-    <%= f.label :start_date %><br>
-    <%= f.date_field :start_date , class: 'form-control'%>
+    <div class="row">
+        <div class='col-sm-6'>
+          <%= f.label :start_date %><br>
+            <div class="form-group">
+                <div class='input-group date' id='dp1'>
+                    <input type='text' name="league[start_date]" id='league_start_date' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class='col-sm-6'>
+          <%= f.label :finish_date %><br>
+            <div class="form-group">
+                <div class='input-group date' id='dp2'>
+                    <input type='text' name="league[finish_date]" id='league_finish_date' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#dp1').datetimepicker({
+                  useCurrent:false,
+                  defaultDate:window.start_date
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                $('#dp2').datetimepicker({
+                  useCurrent:false,
+                  defaultDate:window.finish_date
+                });
+            });
+        </script>
+    </div>
   </div>
-  <div class="form-group">
-    <%= f.label :finish_date %><br>
-    <%= f.date_field :finish_date , class: 'form-control'%>
-  </div>
-  <%= f.button :submit, class: 'btn-default' %>
+  <%= f.button :submit, class: 'btn-default pull-left' %>
 <% end %>

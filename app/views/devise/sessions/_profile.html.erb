@@ -1,6 +1,8 @@
 <div class="container profile">
 	<center><h2>Profile</h2></center>
+	
 	<ul class="list-group">
+		<li class="list-group-item"><%= image_tag(ApplicationHelper.get_avatar_user(current_user.name,1), :alt => "Profile Image", class: "image_user_profile") %></li>
 		<li class="list-group-item"> Hi <%= current_user.name %>!</li>
 	  	<% @rs = current_user.friends_two_req %>
 	  	<% if @rs.length  == 0 %>
@@ -10,4 +12,5 @@
 	  	<% end %>
 	  	<a href=<%= destroy_user_session_path %> data-method="delete" class="list-group-item">Log out</a>
 	</ul>
+
 </div>

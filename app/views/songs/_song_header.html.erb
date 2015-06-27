@@ -1,0 +1,16 @@
+<table class="table">
+	<tr class="row">
+		<td class="col-md-10">
+			<h1>
+			  <%= @song.name %>
+			</h1>
+			<h4>
+				<div class="btn btn-default"><%= link_to 'View on SMO', ApplicationHelper.get_song_server_url(@song.server_id) %></div>
+				<span class="label label-default"><%= @song.server_difficulty_name %> (<%= @song.server_difficulty_number %>)</span>
+			</h4>
+		</td>
+		<td class="col-md-2">
+			<%= image_tag(ApplicationHelper.get_song_server_img(@song.server_id,1), :alt => "Image", class: "image pull-right") %>
+		</td>
+	</tr>
+</table>

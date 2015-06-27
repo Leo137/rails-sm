@@ -17,12 +17,15 @@ class Ability
           can :propose_song_delete, :all
           can :join_league_post, :all
           can :join_league_delete, :all
+          can :publish_comment_post, :all
+          can :publish_comment_delete, :all
         end
     end
     user ||= User.new # guest user (not logged in)
     can :index, :all
     can :show, :all
     can :index_rank, :all
+    can :publish_comment_show, :all
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

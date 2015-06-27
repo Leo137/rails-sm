@@ -15,6 +15,7 @@
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import 'bootstrap-datetimepicker';
 body { padding-top: 10px; }
 .btn-link {  padding: 0px; vertical-align: baseline; margin-top: -2px; }
 .btn-default {  vertical-align: baseline; margin-top: -6px; margin-right: 3px; }
@@ -22,6 +23,8 @@ body { padding-top: 10px; }
 
 .image { @include size(250px, 200px); }
 .image_user { @include size(150px, 150px); }
+.image_user_profile { @include size(135px, 135px); }
+.image_user_small { @include size(50px, 50px); }
 
 html {
   position: relative;

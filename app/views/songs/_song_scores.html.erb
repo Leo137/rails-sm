@@ -1,0 +1,55 @@
+<% if current_user != nil %>
+	<% user_scores = current_user.user_scores.where("song_id =?", @song.id).order(server_migs_dp_obtained: :desc).take(5) %>
+	<% user_scores_count = current_user.user_scores.where("song_id =?", @song.id).order(server_migs_dp_obtained: :desc).count %>
+	<% if user_scores_count > 0 %>
+	<h2>Your Top 5 Scores (Total: <%= user_scores_count %>)</h2>
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th>Match ID</th>
+		      <th>Date</th>
+		      <th>Percent</th>
+		      <th>Marv-Perf-Great-Good-Bad-Miss</th>
+		      <th>Mines Hit/Missed</th>
+		      <th>Max Combo</th>
+		      <th colspan="1"></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <% user_scores.each do |user_score| %>
+		      <tr>
+		        <td><%= link_to user_score.server_id.to_s, ApplicationHelper.get_match_server_url(user_score.server_id) %></td>
+		        <td><%= user_score.server_date.strftime('%a, %d %b %Y %H:%M:%S') %></td>
+		        <td><%= user_score.server_percent %>%</td>
+		        <td>
+		        	<%= image_tag(ApplicationHelper.get_grade_image(user_score.server_grade), :alt => "", class: "pull-right") %>
+		        	<%= user_score.server_marvelous %>-<%= user_score.server_perfects %>-<%= user_score.server_greats %>-<%= user_score.server_goods %>-<%= user_score.server_bads %>-<%= user_score.server_misses %>
+		        </td>
+		        <td><%= user_score.server_mines_hit %>/<%= user_score.server_mines_missed %></td>
+		        <td><%= user_score.server_max_combo %></td>
+		      </tr>
+		    <% end %>
+		  </tbody>
+		</table>
+	<% else %>
+		<h2>No Scores yet</h2>
+	<% end %>
+
+	<%= form_tag(songs_path, method: "get") do %>
+		<%= submit_tag("Back", class: "btn btn-default pull-right") %>
+	<% end %>
+	<% if can? :manage, @song %>
+		<%= form_tag(edit_song_path(@song), method: "get") do %>
+			<%= submit_tag("Edit", class: "btn btn-default pull-right") %>
+		<% end %>
+	<% end %>
+	<%= form_tag(songs_update_score_path, method: "get") do %>
+	<%= hidden_field_tag(:userid, current_user.id) %>
+	<%= hidden_field_tag(:id, @song.id) %>
+	<%= submit_tag("Update scores", class: "btn btn-primary pull-right") %>
+	<% end %>
+<% else %>
+	<div class="container jumbotron">
+		<center><h3>Debes estar logeado para guardar tus puntuaciones y comentar</h3></center>
+	</div>
+<% end %>

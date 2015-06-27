@@ -1,0 +1,28 @@
+<table class="table">
+	<thead>
+		<tr>
+			<th class="col-md-8">
+				<h1><%= @league.name %></h1>
+				<h4><%= @league.description %></h4>
+				<div class="label label-default">Organizado por <%= @league.organizer.name %></div>
+
+
+				<% if Time.now.in_time_zone < @league.start_date %>
+					<span class="label label-info">Esta liga todavia no ha comenzado!</span>
+				<% else %>
+					<% if Time.now.in_time_zone >= @league.start_date && Time.now.in_time_zone < @league.finish_date %>
+						<span class="label label-primary">Liga ya ha comenzado</span>
+					<% else %>
+						<span class="label label-danger">Liga finalizada</span>
+					<% end %>
+				<% end %>
+			</th>
+			<th class="col-md-4">
+				<ul >
+				  <li >Fecha inicio: <%= @league.start_date.strftime('%a, %d %b %Y %H:%M:%S') %></li>
+				  <li >Fecha termino: <%= @league.finish_date.strftime('%a, %d %b %Y %H:%M:%S') %></li>
+				</ul>
+			</th>
+		</tr>
+	</thead>
+</table>

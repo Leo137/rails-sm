@@ -110,6 +110,42 @@ class UsersController < ApplicationController
     end
   end
 
+  def publish_comment_show
+    @comments = @user.comments.order(created_at: :desc).page params[:page];
+    render "publish_comment"
+  end
+
+  def publish_comment_post
+    comment = Comment.new
+    comment.author = current_user;
+    comment.user = @user;
+    comment.comment = params[:message];
+    respond_to do |format|
+      if comment.save then
+        format.html { redirect_to action: "publish_comment_show", id: @user.server_id, notice: 'Comentario creado' }
+      else
+        format.html { redirect_to action: "publish_comment_show", id: @user.server_id, notice: 'Errores.' }
+      end
+    end
+  end
+
+  def publish_comment_delete
+    # unimplemented
+    @relationship_song = RelationshipSong.new
+    @user = User.find_by id: params[:userid]
+    @song = Song.find_by id: params[:songid]
+    @relationship = current_user.friends.where("user_one_id =? OR user_two_id =?", @user.id, @user.id).first
+    @relationship_song.relationship = @relationship
+    @relationship_song.song = @song
+    respond_to do |format|
+      if @relationship_song.save then
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Cancion propuesta!' }
+      else
+        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Errores.' }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user

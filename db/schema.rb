@@ -11,7 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150622194048) do
+ActiveRecord::Schema.define(version: 20150627064258) do
+
+  create_table "comments", force: :cascade do |t|
+    t.integer  "author"
+    t.text     "comment"
+    t.integer  "user"
+    t.integer  "song"
+    t.integer  "league"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "comments", ["league"], name: "index_comments_on_league"
+  add_index "comments", ["song"], name: "index_comments_on_song"
+  add_index "comments", ["user"], name: "index_comments_on_user"
 
   create_table "contestants", force: :cascade do |t|
     t.integer  "status"
@@ -76,6 +90,9 @@ ActiveRecord::Schema.define(version: 20150622194048) do
     t.integer  "server_id"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.string   "pack_name"
+    t.string   "description"
+    t.string   "download_link"
   end
 
   add_index "songs", ["server_difficulty_name", "server_difficulty_number", "server_id"], name: "difficulty_index", unique: true

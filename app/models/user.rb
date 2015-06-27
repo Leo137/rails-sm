@@ -39,4 +39,5 @@ class User < ActiveRecord::Base
   end
 
   has_many :user_scores
+  has_many :comments,class_name:"Comment",foreign_key: "user"
 end
