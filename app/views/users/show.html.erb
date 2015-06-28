@@ -6,4 +6,6 @@
   <li role="presentation" class="active"><a href="#">Perfil</a></li>
   <li role="presentation"><%= link_to "Mensajes", controller: "users", action: "publish_comment_show", id: @user.server_id %></li>
 </ul>
+<div class="thumbnail">
 <%= render 'friend_songs' %>
+</div>

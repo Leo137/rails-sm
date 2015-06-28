@@ -1,8 +1,9 @@
 <p id="notice"><%= notice %></p>
-<p id="notice"><%= params[:notice] %></p>
 <%= render 'league_header' %>
 <ul class="nav nav-tabs">
   <li role="presentation"><%= link_to "Informacion", controller: "leagues", action: "show", id: @league.id %></li>
   <li role="presentation" class="active"><a href="#">Mensajes</a></li>
 </ul>
+<div class="thumbnail">
 <%= render 'publish_comment' %>
+</div>

@@ -1,3 +1,4 @@
+require "uri"
 module ApplicationHelper
 	def resource_name
 		:user
@@ -72,16 +73,17 @@ module ApplicationHelper
 	end
 
     def self.get_avatar_user(name,size)
-    	uri = URI(avatar_url + name + "-" + "medium.png")
+    	# 無心
+    	uri = URI(URI.parse(URI.encode(avatar_url + name.encode("UTF-8") + "-" + "medium.png")))
 		request = Net::HTTP.new uri.host
 		response= request.request_head uri.path
 		exists = response.code.to_i == 200
 
 	  	if name != nil && exists then
 			if size == 1 || size == "medium" then
-				return avatar_url + name + "-" + "medium.png"
+				return avatar_url + name.encode("UTF-8") + "-" + "medium.png"
 			else
-				return avatar_url + name + "-" + "small.png"
+				return avatar_url + name.encode("UTF-8") + "-" + "small.png"
 			end
 	  	else
 	  		if size == 1 || size == "medium" then

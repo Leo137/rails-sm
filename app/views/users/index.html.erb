@@ -1,30 +1,32 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Users</h1>
-
-<ul class="nav nav-pills">
-  <li role="presentation" <% if @order == 'name' %>class="active"<% end %>>
-  		<%= link_to "Name", controller: "users", action: "index" %>
-  </li>
-  <li role="presentation" <% if @order == 'rank' %>class="active"<% end %>>
-  		<%= link_to "Rank", controller: "users", action: "index_rank" %>
-  </li>
-</ul>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @users.each do |user| %>
+<div class="thumbnail">
+    <center><ul class="nav nav-pills max_width">
+    <li role="presentation" <% if @order == 'name' %>class="active"<% end %>>
+    		<%= link_to "Name", controller: "users", action: "index" %>
+    </li>
+    <li role="presentation" <% if @order == 'rank' %>class="active"<% end %>>
+    		<%= link_to "Rank", controller: "users", action: "index_rank" %>
+    </li>
+    </center>
+  </ul>
+  <table class="table">
+    <thead>
       <tr>
-
-        <td><%= link_to user.name, controller: "users", action: "show", id: user.server_id %></td>
+        <th>Name</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+
+          <td><%= link_to user.name, controller: "users", action: "show", id: user.server_id %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <%= paginate @users %>

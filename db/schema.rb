@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150627064258) do
+ActiveRecord::Schema.define(version: 20150628041528) do
 
   create_table "comments", force: :cascade do |t|
     t.integer  "author"
@@ -53,10 +53,12 @@ ActiveRecord::Schema.define(version: 20150627064258) do
     t.string   "name"
     t.string   "description"
     t.integer  "organizer_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.datetime "start_date"
     t.datetime "finish_date"
+    t.boolean  "allows_join_when_started"
+    t.integer  "scoring_mode"
   end
 
   add_index "leagues", ["organizer_id"], name: "index_leagues_on_organizer_id"

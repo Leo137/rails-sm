@@ -1,6 +1,24 @@
+class ServerValidator < ActiveModel::Validator
+  def validate(user)
+    url = ApplicationHelper.get_profile_server_url(user.server_id)
+    charset = nil
+    html = open(url) do |f|
+      charset = f.charset # 文字種別を取得
+    end
+    doc = Nokogiri::HTML(open(url),nil,charset)
+    user_name = doc.xpath('/html/body/div/div[2]/div[2]/div[1]/center')
+    if user_name.children[0] == nil || user_name.children[0].text != user.name
+      user.errors[:base] << "Name is different from server name: " +  user_name.children[0].text
+    end
+  end
+end
+
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
+  validates_with ServerValidator
+  validates :server_id, uniqueness: true
+  validates :name, uniqueness: true
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   max_paginates_per 10
@@ -38,6 +56,6 @@ class User < ActiveRecord::Base
    	friends_one_all.union(friends_two_all)
   end
 
-  has_many :user_scores
-  has_many :comments,class_name:"Comment",foreign_key: "user"
+  has_many :user_scores, :dependent => :delete_all
+  has_many :comments,class_name:"Comment",foreign_key: "user", :dependent => :delete_all
 end

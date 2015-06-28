@@ -94,6 +94,8 @@ Rails.application.routes.draw do
   get 'leagues/publish_comment/:page' => 'leagues#publish_comment_show'
   post 'leagues/publish_comment' => 'leagues#publish_comment_post'
   delete 'leagues/publish_comment' => 'leagues#publish_comment_delete'
+  get 'leagues/update_scores' => 'leagues#update_scores_get'
+  get 'leagues/update_scores_all' => 'leagues#update_scores_all_get'
   resources :leagues
   
   

@@ -73,5 +73,12 @@
         </script>
     </div>
   </div>
+  <div class="form-group">
+    <%= f.label "Allows join when started?" %>
+    <%= f.check_box  :allows_join_when_started , class: ''%>
+  </div>
+  <div class="form-group">
+    <%= f.input :scoring_mode , collection: [1,2], default: 1, class: ''%>
+  </div>
   <%= f.button :submit, class: 'btn-default pull-left' %>
 <% end %>

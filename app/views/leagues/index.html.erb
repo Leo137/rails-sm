@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 <p id="notice"><%= params[:notice] %></p>
 <h1>Leagues</h1>
-
+<div class="thumbnail">
 <table class="table">
   <thead>
     <tr>
@@ -45,7 +45,7 @@
     <% end %>
   </tbody>
 </table>
-
+</div>
 <br>
 <% if can? :manage, @leagues %>
   <%= form_tag(new_league_path, method: "get") do %>

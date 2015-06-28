@@ -1,7 +1,9 @@
 require 'date'
+require "#{Rails.root}/app/poro/scores_parser.rb"
+
 class LeaguesController < ApplicationController
   load_and_authorize_resource 
-  before_action :set_league, only: [:show, :edit, :update, :destroy, :add_song_show]
+  before_action :set_league, only: [:show, :edit, :update, :destroy, :add_song_show, :update_scores_get, :update_scores_all_get]
 
   # GET /leagues
   # GET /leagues.json
@@ -105,8 +107,8 @@ class LeaguesController < ApplicationController
   def join_league_post
     @user = User.find_by id: params[:userid]
     @league = League.find_by id: params[:leagueid]
-    if Time.now.in_time_zone > @league.start_date then
-      redirect_to action: "index", notice: 'Error: La liga ya empezo.'
+    if (Time.now.in_time_zone > @league.start_date) && (!@league.allows_join_when_started || Time.now.in_time_zone >= @league.finish_date) then
+      redirect_to action: "index", notice: 'Error: La liga ya empezo/termino.'
       return
     end
     @contestant = Contestant.new
@@ -164,7 +166,7 @@ class LeaguesController < ApplicationController
     @league_song.factor = params[:factor]
     respond_to do |format|
       if @league_song.save then
-        format.html { redirect_to action: "add_song_show", id: @league_song.league_id, notice: 'Cancion eliminada correctamente.' }
+        format.html { redirect_to action: "add_song_show", id: @league_song.league_id, notice: 'Factor modificado correctamente' }
         format.json { head :no_content }
       end
     end
@@ -176,10 +178,32 @@ class LeaguesController < ApplicationController
     @league_song = @league.league_songs.where("song_id =?", @song.id).first
     respond_to do |format|
       if @league_song.destroy then
-        format.html { redirect_to action: "show", id: @league, notice: 'Factor modificado correctamente.' }
+        format.html { redirect_to action: "show", id: @league, notice: 'Cancion eliminada correctamente.' }
         format.json { head :no_content }
       end
     end
+  end
+
+  def update_scores_get
+    user = User.find(params[:userid])
+    league_song = @league.songs
+    sp = ScoresParser.new
+    league_song.each do |song|
+      sp.get_user_song_scores(user,song)
+    end
+    redirect_to @league, notice: @content
+  end
+
+  def update_scores_all_get
+    league_song = @league.songs
+    users = @league.users
+    sp = ScoresParser.new
+    users.each do |user|
+      league_song.each do |song|
+        sp.get_user_song_scores(user,song)
+      end
+    end
+    redirect_to @league, notice: @content
   end
 
   private
@@ -193,8 +217,26 @@ class LeaguesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def league_params
       format = "%m/%d/%Y%n%l:%M%n%p"
-      params[:league][:start_date] = DateTime.strptime(params[:league][:start_date], format)
-      params[:league][:finish_date] = DateTime.strptime(params[:league][:finish_date],format)
-      params.require(:league).permit(:name, :description, :start_date, :finish_date)
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:finish_date]
+      if params[:league][:start_date].is_a?(String) && params[:league][:finish_date].is_a?(String) then
+        params[:league][:start_date] = DateTime.strptime(params[:league][:start_date], format).change(:offset => DateTime.now.in_time_zone.zone)
+        params[:league][:finish_date] = DateTime.strptime(params[:league][:finish_date],format).change(:offset => DateTime.now.in_time_zone.zone)
+      end
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:start_date]
+      puts params[:league][:finish_date]
+      params.require(:league).permit(:name, :description, :start_date, :finish_date, :allows_join_when_started, :scoring_mode)
     end
 end

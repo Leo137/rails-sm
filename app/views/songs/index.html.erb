@@ -1,13 +1,13 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Songs</h1>
-
+<div class="thumbnail">
 <table class="table">
   <thead>
     <tr>
       <th>Name</th>
       <th>Difficulty</th>
-      <th>Server Id</th>
+      <th>Total plays</th>
       <th colspan="1"></th>
     </tr>
   </thead>
@@ -17,7 +17,8 @@
       <tr>
         <td><%= link_to song.name, song %></td>
         <td><%= song.server_difficulty_name %>(<%= song.server_difficulty_number %>)</td>
-        <td><%= song.server_id %></td>
+        <td><%= song.user_scores.count %></td>
+        <!-- <td><%= song.server_id %></td> -->
         <% if can? :manage, @songs %>
           <td><%= link_to 'Edit', edit_song_path(song) %></td>
           <td><%= link_to 'Destroy', song, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -29,6 +30,7 @@
     <% end %>
   </tbody>
 </table>
+</div>
 
 <br>
 <% if can? :manage, @songs %>

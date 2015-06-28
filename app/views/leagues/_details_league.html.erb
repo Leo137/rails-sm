@@ -23,29 +23,41 @@
 <% if @league.songs.count > 0 %>
 <h2>Scores</h2>
 	<table data-toggle="table">
+		  <% users_ordered = [] %>
+		  <% score_canonical = {} %>
+		  <% @league.users.each do |user| %>
+		  	<% users_ordered = users_ordered.push({"user" => user, "score" => 0.0, "song_score" => []}) %>
+		  	<% @league.songs.each do |song| %>
+		  		<% league_song = @league.league_songs.where("song_id =?", song.id).first %>
+		  		<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
+		  		<% if score != nil %>
+		  			<% if @league.scoring_mode == nil || @league.scoring_mode == 1 %>
+		  				<% points = (league_song.factor * score.server_migs_dp_obtained).round(2) %>
+		  				<% perfect_points = (league_song.factor * score.server_migs_dp_max).round(2) %>
+		  			<% end %>
+		  			<% if @league.scoring_mode == 2 %>
+		  				<% points = (score.server_percent * (1 - Math::E ** (-1*0.1054*league_song.factor))).round(2) %>
+		  				<% perfect_points = (100 * (1 - Math::E ** (-1*0.1054*league_song.factor))).round(2) %>
+		  			<% end %>
+		  			<% score_canonical[song.server_id] = (perfect_points) %>
+		  			<% users_ordered[users_ordered.length-1]["song_score"].push(points) %>
+		  			<% users_ordered[users_ordered.length-1]["score"] = (users_ordered[users_ordered.length-1])["score"] + points %>
+		  		<% end %>
+		  	<% end %>
+		  	<% users_ordered.sort! { |x,y| y["score"] <=> x["score"] } %>
+		  <% end %>
 		  <thead>
 		    <tr>
 		      <th>#</th>
 		      <th>Usuario</th>
 		      <% @league.songs.each do |song| %>
-		      	<th><%= link_to song.name, controller: "songs", action: "show", id: song.id %></th>
+		      	<th><%= link_to song.name, controller: "songs", action: "show", id: song.id %>
+		      		<small class="label label-default center-block"><%= score_canonical[song.server_id] != nil ? score_canonical[song.server_id] : "--" %>pts max</small></th>
 		      <% end %>
 		      <th>Puntos totales</th>
 		      <th colspan="3"></th>
 		    </tr>
 		  </thead>
-		  <% users_ordered = [] %>
-		  <% @league.users.each do |user| %>
-		  	<% users_ordered = users_ordered.push({"user" => user, "score" => 0.0}) %>
-		  	<% @league.songs.each do |song| %>
-		  		<% league_song = @league.league_songs.where("song_id =?", song.id).first %>
-		  		<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
-		  		<% if score != nil %>
-		  			<% (users_ordered[users_ordered.length-1])["score"] = (users_ordered[users_ordered.length-1])["score"] + (league_song.factor * score.server_migs_dp_obtained).round(2) %>
-		  		<% end %>
-		  	<% end %>
-		  	<% users_ordered.sort! { |x,y| y["score"] <=> x["score"] } %>
-		  <% end %>
 		  <tbody style="height:110px">
 		  	<% i = 1 %>
 		    <% users_ordered.each do |u| %>
@@ -53,10 +65,10 @@
 		      <tr id="tr-id-1" class="tr-class-1">
 		      	<td id="td-id-1" class="td-class-1">
 		    		<%= i %>
-		    		<% i = i + 1 %>
 		    	</td>
 		      	<% user = u["user"] %>
 		      	<td id="td-id-1" class="td-class-1"><div class="center-block leaguecellname"><%= link_to user.name, controller: "users", action: "show", id: user.server_id %></div></td>
+		      	<% j = 0 %>
 		      	<% @league.songs.each do |song| %>
 		      		<% league_song = @league.league_songs.where("song_id =?", song.id).first %>
 			      	<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
@@ -66,14 +78,16 @@
 			      				<%= image_tag(ApplicationHelper.get_grade_image(score.server_grade), :alt => "", class: "center-block") %>
 			      				<center><%= link_to score.server_percent.round(1).to_s+"%", ApplicationHelper.get_match_server_url(score.server_id) %>
 			      				</center>
-			      				<small class="label label-default center-block">(<%=(league_song.factor * score.server_migs_dp_obtained).round(2) %>pts)</small>
+			      				<small class="label label-default center-block">(<%= u["song_score"][j] %>pts)</small>
 			      			
 			      			</div>
 			      		</td>
+			      		<% j = j + 1 %>
 			      	<% else %>
 			      		<td id="td-id-1" class="td-class-1">--</td>
 			      	<% end %>
 		      	<% end %>
+		      	<% i = i + 1 %>
 		      	<td id="td-id-1" class="td-class-1"><%= u["score"] %></td>
 		      </tr>
 		    <% end %>
@@ -95,6 +109,10 @@
 		<%= hidden_field_tag(:id, @league.id) %>
 	  	<%= submit_tag("Administrar canciones", class: "btn btn-default pull-left") %>
 	<% end %>
+	<%= form_tag(leagues_update_scores_all_path, method: "get") do %>
+		<%= hidden_field_tag(:id, @league.id) %>
+	  	<%= submit_tag("Update all Scores", class: "btn btn-default pull-left") %>
+	<% end %>
 <% end %>
 
 <% @user = @league.users.find(current_user.id) rescue nil %>
@@ -112,6 +130,11 @@
 			    <%= hidden_field_tag(:leagueid, @league.id) %>
 			    <%= submit_tag("Leave League", class: "btn btn-default pull-right") %>
 			<% end %>
+		<% end %>
+		<%= form_tag(leagues_update_scores_path, method: "get") do %>
+		    <%= hidden_field_tag(:userid, current_user.id) %>
+		    <%= hidden_field_tag(:id, @league.id) %>
+		    <%= submit_tag("Update Scores", class: "btn btn-primary pull-right") %>
 		<% end %>
 	<% end %>
 <% else %>
