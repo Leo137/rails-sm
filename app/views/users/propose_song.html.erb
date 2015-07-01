@@ -1,7 +1,8 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Propose Song</h1>
-
+<div class="container">
+<div class="thumbnail">
 <table class="table">
   <thead>
     <tr>
@@ -21,13 +22,13 @@
 		        	<%= form_tag(users_propose_song_path, method: "post") do %>
 						<%= hidden_field_tag(:userid, @user.id) %>
 						<%= hidden_field_tag(:songid, song.id) %>
-					  	<%= submit_tag("Proponer cancion", class: "btn btn-default pull-right") %>
+					  	<%= submit_tag("Propose Song", class: "btn btn-default pull-right") %>
 					<% end %>
 				<% else %>
 					<%= form_tag(users_propose_song_path, method: "delete") do %>
 						<%= hidden_field_tag(:userid, @user.id) %>
 						<%= hidden_field_tag(:songid, song.id) %>
-					  	<%= submit_tag("Remover", class: "btn btn-default pull-right") %>
+					  	<%= submit_tag("Remove", class: "btn btn-default pull-right") %>
 					<% end %>
 				<% end %>
 	        </td>
@@ -36,6 +37,6 @@
     <% end %>
   </tbody>
 </table>
-
-<br>
+</div>
 <%= paginate @songs %>
+</div>

@@ -18,3 +18,10 @@
 //= require bootstrap-sprockets
 //= require moment
 //= require bootstrap-datetimepicker
+$(document).ready(function () {
+	window.setTimeout(function() {
+	    $(".alert").fadeTo(1000, 0).slideUp(200, function(){
+	        $(this).remove(); 
+	    });
+	}, 700);
+});

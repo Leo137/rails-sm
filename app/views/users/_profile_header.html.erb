@@ -1,16 +1,16 @@
-<table class="table">
-	<tr class="row">
-		<td class="col-md-10">
-			<h1>
-			  <%= @user.name %>
-			</h1>
-			<h4>
-				<div class="btn btn-default pull-left"><%= link_to 'View on SMO', ApplicationHelper.get_profile_server_url(@user.server_id) %></div>
-				<%= render 'friend_request' %>
-			</h4>
-		</td>
-		<td class="col-md-2">
-			<%= image_tag(ApplicationHelper.get_avatar_user(@user.name,1), :alt => "Profile Image", class: "image_user pull-right") %>
-		</td>
-	</tr>
-</table>
+<div class="container container_profile">
+	<div class="row">
+	<div class="col-md-10">
+		<h1>
+		  <%= @user.name %>
+		</h1>
+		<h4>
+			<div class="btn btn-default pull-left"><%= link_to 'View on SMO', ApplicationHelper.get_profile_server_url(@user.server_id) %></div>
+			<%= render 'friend_request' %>
+		</h4>
+	</div>
+	<div class="col-md-2">
+		<%= image_tag(ApplicationHelper.get_avatar_user(@user.name,1), :alt => "Profile Image", class: "image_user pull-right") %>
+	</div>
+	</div>
+</div>

@@ -1,21 +1,33 @@
-<h2>Comentarios</h2>
+
+<div class="container">
+	<h2>Comments</h2>
 <% if @comments.count == 0 %>
-	<h4>No hay comentarios</h4>
+	<div class="container jumbotron">
+		<center><h3>No comments yet</h3></center>
+	</div>
 <% end %>
-<table class="table">
-  <tbody>
-  	<% @comments.each do |comment| %>
-  		<tr class="row">
-  			<td class="col-sm-1">
-				<%= image_tag(ApplicationHelper.get_avatar_user(comment.author.name,1), :alt => "Profile Image", class: "image_user_small pull-left") %>
-			</td>
-  			<td class="col-md-11">
-  				<%= link_to comment.author.name, controller: "users", action: "show", id: comment.author.server_id %>(<%= comment.created_at.strftime('%I:%M %p')%>): <%= comment.comment %>
-  			</td>
-  		</tr>
-  	<% end %>
-  </tbody>
-</table>
+<% @comments.each do |comment| %>
+	<div class="row">
+		<div class="col-sm-1">
+			<div class="thumbnail2">
+				<%= image_tag(ApplicationHelper.get_avatar_user(comment.author.name,1), :alt => "Profile Image", class: "image_user_small") %>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong><%= link_to comment.author.name, controller: "users", action: "show", id: comment.author.server_id %></strong><span class="text-muted"> (<%= comment.created_at.strftime('%I:%M %p')%>)</span>
+				</div>
+				<div class="panel-body">
+					<%= comment.comment %>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+		</div>
+	</div>
+<% end %>
+</div>
 <%= paginate @comments %>
 <% if can? :publish_comment_post, @user %>
 	<table class="table">
@@ -27,9 +39,9 @@
 				<td class="col-sm-2">
 					<%= form_tag(users_publish_comment_path, method: "post") do %>
 					<%= hidden_field_tag(:id, @user.server_id) %>
-					<%= text_area_tag :message, '', size: "40x2", placeholder: "Escribe un comentario...", class: "input-group center pull-left" %>
+					<%= text_area_tag :message, '', size: "40x2", placeholder: "Write a comment...", class: "input-group center pull-left" %>
 					</br></br></br>
-				    <%= submit_tag("Enviar", class: "btn btn-default pull-left") %>
+				    <%= submit_tag("Send", class: "btn btn-default pull-left") %>
 				    <% end %>
 				</td>
 				<td class="col-sm-9">

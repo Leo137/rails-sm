@@ -20,13 +20,13 @@
         <td><% if relationship.user_one == current_user %>
         		<%= form_tag(users_friend_request_path, method: "delete", class: "simple_form") do %>
 				  <%= hidden_field_tag(:id, @friend.server_id) %>
-				  <%= submit_tag "Cancelar solicitud", class: "btn btn-default pull-right" %>
+				  <%= submit_tag "Cancel request", class: "btn btn-default pull-right" %>
 				<% end %>
 			<% else %>
 				<%= form_tag(users_friend_request_path, method: "put", class: "simple_form") do %>
 				  <%= hidden_field_tag(:id, @friend.server_id) %>
 				  <%= hidden_field_tag(:status, 1) %>
-				  <%= submit_tag "Aceptar solicitud", class: "btn btn-default pull-right" %>
+				  <%= submit_tag "Accept request", class: "btn btn-default pull-right" %>
 				<% end %>
 			<% end %>
         </td>
@@ -56,7 +56,7 @@
         <td>
     		<%= form_tag(users_friend_request_path, method: "delete", class: "simple_form") do %>
 			  <%= hidden_field_tag(:id, @friend.server_id) %>
-			  <%= submit_tag "Eliminar", class: "btn btn-default pull-right" %>
+			  <%= submit_tag "Remove from friends", class: "btn btn-default pull-right" %>
 			<% end %>
         </td>
       </tr>

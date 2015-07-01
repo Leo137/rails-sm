@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 <%= render 'profile_header' %>
 <ul class="nav nav-tabs">
-  <li role="presentation"><%= link_to "Perfil", controller: "users", action: "show", id: @user.server_id %></li>
-  <li role="presentation" class="active"><a href="#">Mensajes</a></li>
+  <li role="presentation"><%= link_to "Profile", controller: "users", action: "show", id: @user.server_id %></li>
+  <li role="presentation" class="active"><a href="#">Messages</a></li>
 </ul>
 <div class="thumbnail">
 <%= render 'publish_comment' %>

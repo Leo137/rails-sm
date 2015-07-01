@@ -1,14 +1,18 @@
 class ServerValidator < ActiveModel::Validator
   def validate(user)
-    url = ApplicationHelper.get_profile_server_url(user.server_id)
-    charset = nil
-    html = open(url) do |f|
-      charset = f.charset # 文字種別を取得
-    end
-    doc = Nokogiri::HTML(open(url),nil,charset)
-    user_name = doc.xpath('/html/body/div/div[2]/div[2]/div[1]/center')
-    if user_name.children[0] == nil || user_name.children[0].text != user.name
-      user.errors[:base] << "Name is different from server name: " +  user_name.children[0].text
+    if user.server_id == nil || user.server_id == "" || user.server_id.to_i.to_s != user.server_id.to_s
+      user.errors[:base] << "You must profile a valid server id"
+    else
+      url = ApplicationHelper.get_profile_server_url(user.server_id)
+      charset = nil
+      html = open(url) do |f|
+        charset = f.charset # 文字種別を取得
+      end
+      doc = Nokogiri::HTML(open(url),nil,charset)
+      user_name = doc.xpath('/html/body/div/div[2]/div[2]/div[1]/center')
+      if user_name.children[0] == nil || user_name.children[0].text != user.name
+        user.errors[:base] << "Name is different from server name: " +  user_name.children[0].text
+      end
     end
   end
 end

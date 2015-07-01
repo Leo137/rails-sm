@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150628041528) do
+ActiveRecord::Schema.define(version: 20150701214506) do
 
   create_table "comments", force: :cascade do |t|
     t.integer  "author"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 20150628041528) do
     t.datetime "finish_date"
     t.boolean  "allows_join_when_started"
     t.integer  "scoring_mode"
+    t.boolean  "visible"
   end
 
   add_index "leagues", ["organizer_id"], name: "index_leagues_on_organizer_id"
@@ -95,6 +96,7 @@ ActiveRecord::Schema.define(version: 20150628041528) do
     t.string   "pack_name"
     t.string   "description"
     t.string   "download_link"
+    t.integer  "server_migs_dp_max"
   end
 
   add_index "songs", ["server_difficulty_name", "server_difficulty_number", "server_id"], name: "difficulty_index", unique: true

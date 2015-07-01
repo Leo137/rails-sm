@@ -1,10 +1,15 @@
-<p id="notice"><%= params[:notice] %></p>
+<% if notice != nil && notice != "" %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
 
 <%= render 'profile_header' %>
 
 <ul class="nav nav-tabs">
-  <li role="presentation" class="active"><a href="#">Perfil</a></li>
-  <li role="presentation"><%= link_to "Mensajes", controller: "users", action: "publish_comment_show", id: @user.server_id %></li>
+  <li role="presentation" class="active"><a href="#">Profile</a></li>
+  <li role="presentation"><%= link_to "Messages", controller: "users", action: "publish_comment_show", id: @user.server_id %></li>
 </ul>
 <div class="thumbnail">
 <%= render 'friend_songs' %>

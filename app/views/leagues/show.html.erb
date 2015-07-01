@@ -1,14 +1,16 @@
   <%= stylesheet_link_tag    'bootstrap-table.min', media: 'all', 'data-turbolinks-track' => false %>
   <%= javascript_include_tag 'bootstrap-table-all-min', 'data-turbolinks-track' => false %>
-  <p id="notice"><%= notice %></p>
-<p id="notice"><%= params[:notice] %></p>
+<% if notice != nil && notice != "" %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
 <%= render 'league_header' %>
 <ul class="nav nav-tabs">
-  <li role="presentation" class="active"><a href="#">Informacion</a></li>
-  <li role="presentation"><%= link_to "Mensajes", controller: "leagues", action: "publish_comment_show", id: @league.id %></li>
+  <li role="presentation" class="active"><a href="#">Information</a></li>
+  <li role="presentation"><%= link_to "Messages", controller: "leagues", action: "publish_comment_show", id: @league.id %></li>
 </ul>
 <div class="thumbnail">
 <%= render 'details_league' %>
-</br>
-</br>
 </div>

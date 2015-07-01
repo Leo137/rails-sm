@@ -28,27 +28,42 @@
         <li <% if controller_name == 'users' %>class="active"<% end %>><%= link_to 'Users',  users_path %></li>
         <li <% if controller_name == 'leagues' %>class="active"<% end %>><%= link_to 'Leagues',  leagues_path %></li>
       </ul>
+      <% if !user_signed_in? %>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Login/Sign up</b> <span class="caret"></span></a>
+            <ul id="login-dp" class="dropdown-menu">
+              <li>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <%= render 'devise/sessions/form' %>
+                    </div>
+                  </div>
+              </li>
+            </ul>
+        </li>
+      </ul>
+      <% end %>
     </div>
   </div>
 </nav>
-
 <div class="jumbotron">
 	<div class="container master-container">
 		<div class="row">
-			<div class="col-md-9">
+      <% if !user_signed_in? %>
+			<div class="col-md-12">
+      <% else %>
+      <div class="col-md-9">
+      <% end %>
 				<%= yield %>
 			</div>
-			<div class="col-md-1">
+      <% if user_signed_in? %>
+			<div class="col-md-3">
+				<% if controller_name != 'registrations' and controller_name != 'sessions' %>
+				  <%= render 'devise/sessions/profile' %>
+				<% end %>
 			</div>
-  			<div class="col-md-2">
-  				<% if controller_name != 'registrations' and controller_name != 'sessions' %>
-  				<% if user_signed_in? %>
-  					<%= render 'devise/sessions/profile' %>
-  				<% else %>
-  					<%= render 'devise/sessions/form' %>
-  				<% end %>
-  				<% end %>
-  			</div>
+      <% end %>
   		</div>
 	</div>
 </div>

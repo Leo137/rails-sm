@@ -2,10 +2,8 @@
 <%= render 'song_header' %>
 <ul class="nav nav-tabs">
   <li role="presentation" class="active"><a href="#">Best Scores</a></li>
-  <li role="presentation"><%= link_to "Mensajes", controller: "songs", action: "publish_comment_show", id: @song.id %></li>
+  <li role="presentation"><%= link_to "Messages", controller: "songs", action: "publish_comment_show", id: @song.id %></li>
 </ul>
 <div class="thumbnail">
 <%= render 'song_scores' %>
-</br>
-</br>
 </div>

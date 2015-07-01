@@ -1,3 +1,4 @@
+<div class="container">
 <% if user_signed_in? %>
 	<% if @relationship != nil %>
 		<% @your_points = 0 %>
@@ -71,23 +72,34 @@
 		        <td class="col-md-2"><%= form_tag(users_propose_song_path, method: "delete") do %>
 						<%= hidden_field_tag(:userid, @user.id) %>
 						<%= hidden_field_tag(:songid, song.id) %>
-					  	<%= submit_tag("Remover", class: "btn btn-link") %>
+					  	<%= submit_tag("Remove", class: "btn btn-link") %>
 					<% end %></td>
 		      </tr>
 		    <% end %>
 		  </tbody>
 		</table>
+	<% else %>
+		<% if @user.server_id != current_user.server_id %>
+		<div class="container jumbotron">
+			<center><h3>You must add <b><%= @user.name %></b> as a friend to compete</h3></center>
+		</div>
+		<% else %>
+		<div class="container jumbotron">
+			<center><h3>This is your profile</h3></center>
+		</div>
+		<% end %>
 	<% end %>
 
 	<% if user_signed_in? && @relationship != nil %>
 		<%= form_tag(users_propose_song_path, method: "get") do %>
 			<%= hidden_field_tag(:id, @user.server_id) %>
-		  <%= submit_tag("Proponer cancion", class: "btn btn-default") %>
+		  <%= submit_tag("Propose Song", class: "btn btn-default pull-right") %>
 		<% end %>
 	<% end %>
 
 <% else %>
 	<div class="container jumbotron">
-		<center><h3>Debes estar logeado para ver mas datos de <%= @user.name %></h3></center>
+		<center><h3>You must be logged in to see more info about <b><%= @user.name %></b></h3></center>
 	</div>
 <% end %>
+</div>

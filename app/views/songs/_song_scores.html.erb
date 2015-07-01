@@ -46,10 +46,19 @@
 	<%= form_tag(songs_update_score_path, method: "get") do %>
 	<%= hidden_field_tag(:userid, current_user.id) %>
 	<%= hidden_field_tag(:id, @song.id) %>
-	<%= submit_tag("Update scores", class: "btn btn-primary pull-right") %>
+	<button type="submit" name="commit" data-loading-text="Loading..." class="btn btn-primary pull-right loading_btn">
+		Update scores
+	</button>
 	<% end %>
+	</br>
+	</br>
 <% else %>
 	<div class="container jumbotron">
-		<center><h3>Debes estar logeado para guardar tus puntuaciones y comentar</h3></center>
+		<center><h3>You must be logged in to save your scores and comment</h3></center>
 	</div>
 <% end %>
+<script>
+  $('.loading_btn').on('click', function () {
+    var $btn = $(this).button('loading')
+  })
+</script>

@@ -19,6 +19,7 @@ class Ability
           can :join_league_delete, :all
           can :publish_comment_post, :all
           can :publish_comment_delete, :all
+          can :update_scores_get, :all
         end
     end
     user ||= User.new # guest user (not logged in)

@@ -8,7 +8,11 @@ class LeaguesController < ApplicationController
   # GET /leagues
   # GET /leagues.json
   def index
-    @leagues = League.all
+    if can? :manage, @leagues
+      @leagues = League.all
+    else
+      @leagues = League.all.where(visible: true)
+    end
   end
 
   # GET /leagues/1
@@ -108,7 +112,8 @@ class LeaguesController < ApplicationController
     @user = User.find_by id: params[:userid]
     @league = League.find_by id: params[:leagueid]
     if (Time.now.in_time_zone > @league.start_date) && (!@league.allows_join_when_started || Time.now.in_time_zone >= @league.finish_date) then
-      redirect_to action: "index", notice: 'Error: La liga ya empezo/termino.'
+      flash[:notice] = 'Error, la liga ya ha comenzado'
+      redirect_to leagues_url
       return
     end
     @contestant = Contestant.new
@@ -116,9 +121,11 @@ class LeaguesController < ApplicationController
     @contestant.league = @league
     respond_to do |format|
       if @contestant.save then
-        format.html { redirect_to action: "show", id: @league.id, notice: 'Te uniste a la liga.' }
+        flash[:notice] = 'Te uniste a la liga.'
+        format.html { redirect_to action: "show", id: @league.id}
       else
-        format.html { redirect_to action: "index", notice: 'Errores.' }
+        flash[:notice] = 'Errores'
+        redirect_to leagues_url
       end
     end
   end
@@ -127,13 +134,15 @@ class LeaguesController < ApplicationController
     @user = User.find_by id: params[:userid]
     @league = League.find_by id: params[:leagueid]
     if Time.now.in_time_zone >= @league.finish_date then
-      redirect_to action: "show", id: @league, notice: 'La liga ya ha terminado, no puedes salirte.'
+      flash[:notice] = 'La liga ya ha terminado, no puedes salirte.'
+      redirect_to action: "show", id: @league
       return
     end
     @contestant = @league.contestants.where("user_id =?", @user.id).first
     respond_to do |format|
       if @contestant.destroy then
-        format.html { redirect_to action: "show", id: @league, notice: 'Te saliste de la liga.' }
+        flash[:notice] = 'Te saliste de la liga.'
+        format.html { redirect_to action: "show", id: @league}
         format.json { head :no_content }
       end
     end
@@ -191,7 +200,8 @@ class LeaguesController < ApplicationController
     league_song.each do |song|
       sp.get_user_song_scores(user,song)
     end
-    redirect_to @league, notice: @content
+    flash[:notice] = 'Puntuaciones actualizadas.'
+    redirect_to @league
   end
 
   def update_scores_all_get
@@ -203,7 +213,8 @@ class LeaguesController < ApplicationController
         sp.get_user_song_scores(user,song)
       end
     end
-    redirect_to @league, notice: @content
+    flash[:notice] = 'Puntuaciones actualizadas.'
+    redirect_to @league
   end
 
   private
@@ -217,26 +228,10 @@ class LeaguesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def league_params
       format = "%m/%d/%Y%n%l:%M%n%p"
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:finish_date]
       if params[:league][:start_date].is_a?(String) && params[:league][:finish_date].is_a?(String) then
         params[:league][:start_date] = DateTime.strptime(params[:league][:start_date], format).change(:offset => DateTime.now.in_time_zone.zone)
         params[:league][:finish_date] = DateTime.strptime(params[:league][:finish_date],format).change(:offset => DateTime.now.in_time_zone.zone)
       end
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:start_date]
-      puts params[:league][:finish_date]
-      params.require(:league).permit(:name, :description, :start_date, :finish_date, :allows_join_when_started, :scoring_mode)
+      params.require(:league).permit(:name, :description, :start_date, :finish_date, :allows_join_when_started, :scoring_mode, :visible)
     end
 end

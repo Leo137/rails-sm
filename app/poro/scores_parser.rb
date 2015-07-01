@@ -89,10 +89,10 @@ class ScoresParser
 	            end
 	          end
 	        else
-	          user_score.user = user
-	          user_score.song = song
-	          user_score.server_date = date.in_time_zone
-	          user_score.save
+	        	# user_score.user = user
+		        # user_score.song = song
+		        # user_score.server_date = date.in_time_zone
+		        # user_score.save
 	        end
 	      end
 	      

@@ -1,5 +1,7 @@
 <% if @league.users.count > 0 %>
-<h2>Contestants</h2>
+<div class="row">
+	<div class="col-md-4">
+	<h2>Contestants</h2>
 	<table class="table">
 	  <thead>
 	    <tr>
@@ -16,6 +18,10 @@
 	    <% end %>
 	  </tbody>
 	</table>
+	</div>
+	<div class="col-md-8">
+	</div>
+</div>
 <% else %>
 	<h2>No Contestants yet</h2>
 <% end %>
@@ -29,7 +35,14 @@
 		  	<% users_ordered = users_ordered.push({"user" => user, "score" => 0.0, "song_score" => []}) %>
 		  	<% @league.songs.each do |song| %>
 		  		<% league_song = @league.league_songs.where("song_id =?", song.id).first %>
-		  		<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
+		  		<% score = nil %>
+		  		<% if song.server_migs_dp_max != nil && song.server_migs_dp_max > 0 %>
+		  			<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=? AND server_migs_dp_max >=?", song.id,@league.start_date,@league.finish_date,song.server_migs_dp_max).order(server_migs_dp_obtained: :desc).first %>
+		  		<% else %>
+		  			<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
+		  		<% end %>
+
+		  		
 		  		<% if score != nil %>
 		  			<% if @league.scoring_mode == nil || @league.scoring_mode == 1 %>
 		  				<% points = (league_song.factor * score.server_migs_dp_obtained).round(2) %>
@@ -38,6 +51,36 @@
 		  			<% if @league.scoring_mode == 2 %>
 		  				<% points = (score.server_percent * (1 - Math::E ** (-1*0.1054*league_song.factor))).round(2) %>
 		  				<% perfect_points = (100 * (1 - Math::E ** (-1*0.1054*league_song.factor))).round(2) %>
+		  			<% end %>
+		  			<% if @league.scoring_mode == 3 %>
+		  				<% 
+			  				if score.server_grade == 7
+			  				  points = 6
+			  				end
+			  				if score.server_grade == 6
+			  				  points = 5
+			  				end
+			  				if score.server_grade == 5 
+			  					if score.server_misses == 0 && score.server_bads == 0 && score.server_goods == 0
+			  						points = 4
+			  					else
+			  						points = 3
+			  					end
+			  				end
+			  				if score.server_grade == 4
+			  				  points = 2
+			  				end
+			  				if score.server_grade == 3
+			  				  points = 1
+			  				end
+			  				if score.server_grade == 2
+			  				  points = 0.5
+			  				end
+			  				if score.server_grade == 1 || score.server_grade == 0
+			  				  points = 0
+			  				end
+		  				%>
+		  				<% perfect_points = 6 %>
 		  			<% end %>
 		  			<% score_canonical[song.server_id] = (perfect_points) %>
 		  			<% users_ordered[users_ordered.length-1]["song_score"].push(points) %>
@@ -71,7 +114,11 @@
 		      	<% j = 0 %>
 		      	<% @league.songs.each do |song| %>
 		      		<% league_song = @league.league_songs.where("song_id =?", song.id).first %>
-			      	<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
+			      	<% if song.server_migs_dp_max != nil && song.server_migs_dp_max > 0 %>
+		  			<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=? AND server_migs_dp_max >=?", song.id,@league.start_date,@league.finish_date,song.server_migs_dp_max).order(server_migs_dp_obtained: :desc).first %>
+			  		<% else %>
+			  			<% score = user.user_scores.where("song_id =? AND server_date >=? AND server_date <=?", song.id,@league.start_date,@league.finish_date).order(server_migs_dp_obtained: :desc).first %>
+			  		<% end %>
 			      	<% if score != nil %>
 			      		<td id="td-id-2" class="td-class-2">
 			      			<div class="center-block leaguecell">
@@ -95,23 +142,25 @@
 	</table>
 	</br>
 <% else %>
-	<h2>No Songs yet</h2>
+	<h2>No Songs yet</h2></br>
 <% end %>
 
 
 
 <% if @league.organizer == current_user %>
 	<%= form_tag(edit_league_path(@league), method: "get") do %>
-	  	<%= submit_tag("Administrar liga", class: "btn btn-default pull-left") %>
+	  	<%= submit_tag("Manage league", class: "btn btn-default pull-left") %>
 	<% end %>
 	<span></span>
 	<%= form_tag(leagues_add_song_path, method: "get") do %>
 		<%= hidden_field_tag(:id, @league.id) %>
-	  	<%= submit_tag("Administrar canciones", class: "btn btn-default pull-left") %>
+	  	<%= submit_tag("Manage songs", class: "btn btn-default pull-left") %>
 	<% end %>
 	<%= form_tag(leagues_update_scores_all_path, method: "get") do %>
 		<%= hidden_field_tag(:id, @league.id) %>
-	  	<%= submit_tag("Update all Scores", class: "btn btn-default pull-left") %>
+		<button type="submit" name="commit" data-loading-text="Loading..." class="btn btn-default pull-left loading_btn">
+			Update all scores
+		</button>
 	<% end %>
 <% end %>
 
@@ -134,11 +183,20 @@
 		<%= form_tag(leagues_update_scores_path, method: "get") do %>
 		    <%= hidden_field_tag(:userid, current_user.id) %>
 		    <%= hidden_field_tag(:id, @league.id) %>
-		    <%= submit_tag("Update Scores", class: "btn btn-primary pull-right") %>
+		    <button type="submit" name="commit" data-loading-text="Loading..." class="btn btn-primary pull-right loading_btn">
+				Update scores
+			</button>
 		<% end %>
 	<% end %>
+	</br>
+	</br>
 <% else %>
 	<div class="container jumbotron">
-		<center><h3>Debes estar logeado para unirte a las ligas</h3></center>
+		<center><h3>You must be logged in to join the leagues</h3></center>
 	</div>
 <% end %>
+<script>
+  $('.loading_btn').on('click', function () {
+    var $btn = $(this).button('loading')
+  })
+</script>

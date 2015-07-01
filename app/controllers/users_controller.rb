@@ -34,9 +34,11 @@ class UsersController < ApplicationController
     @relationship.status = 0
     respond_to do |format|
       if @relationship.save then
-        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Solicitud enviada.' }
+        flash[:notice] = 'Solicitud enviada'
+        format.html { redirect_to action: "show", id: @user.server_id }
       else
-        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Errores.' }
+        flash[:notice] = 'Errores'
+        format.html { redirect_to action: "show", id: @user.server_id }
       end
     end
   end
@@ -48,9 +50,11 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @relationship.destroy then
         if @status == 0 then
-          format.html { redirect_to action: "show", id: @user.server_id, notice: 'Solicitud cancelada.' }
+          flash[:notice] = 'Solicitud cancelada!'
+          format.html { redirect_to action: "show", id: @user.server_id }
         else
-          format.html { redirect_to action: "show", id: @user.server_id, notice: 'Amistad eliminada.' }
+          flash[:notice] = 'Amistad cancelada!'
+          format.html { redirect_to action: "show", id: @user.server_id }
         end
       end
     end
@@ -62,7 +66,8 @@ class UsersController < ApplicationController
     @relationship.status = 1
     respond_to do |format|
       if @relationship.save then
-        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Solicitud aceptada.' }
+        flash[:notice] = 'Solicitud aceptada.'
+        format.html { redirect_to action: "show", id: @user.server_id }
       end
     end
   end
@@ -88,9 +93,11 @@ class UsersController < ApplicationController
     @relationship_song.song = @song
     respond_to do |format|
       if @relationship_song.save then
-        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Cancion propuesta!' }
+        flash[:notice] = 'Cancion propuesta!'
+        format.html { redirect_to action: "show", id: @user.server_id }
       else
-        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Errores.' }
+        flash[:notice] = 'Errores'
+        format.html { redirect_to action: "show", id: @user.server_id }
       end
     end
   end
@@ -103,9 +110,10 @@ class UsersController < ApplicationController
     @relationship_song = RelationshipSong.where("relationship_id =? AND song_id =?", @relationship.id, @song.id).first
     respond_to do |format|
       if @relationship_song.delete then
-        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Cancion eliminada!' }
+        flash[:notice] = 'Cancion eliminada!'
+        format.html { redirect_to action: "show", id: @user.server_id }
       else
-        format.html { redirect_to action: "show", id: @user.server_id, notice: 'Errores.' }
+        format.html { redirect_to action: "show", id: @user.server_id }
       end
     end
   end
@@ -122,9 +130,10 @@ class UsersController < ApplicationController
     comment.comment = params[:message];
     respond_to do |format|
       if comment.save then
-        format.html { redirect_to action: "publish_comment_show", id: @user.server_id, notice: 'Comentario creado' }
+        format.html { redirect_to action: "publish_comment_show", id: @user.server_id }
       else
-        format.html { redirect_to action: "publish_comment_show", id: @user.server_id, notice: 'Errores.' }
+        flash[:notice] = 'Errores'
+        format.html { redirect_to action: "publish_comment_show", id: @user.server_id }
       end
     end
   end
