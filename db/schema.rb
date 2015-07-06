@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701214506) do
+ActiveRecord::Schema.define(version: 20150706012854) do
 
   create_table "comments", force: :cascade do |t|
     t.integer  "author"
@@ -21,10 +21,14 @@ ActiveRecord::Schema.define(version: 20150701214506) do
     t.integer  "league"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "news"
+    t.integer  "stairway"
   end
 
   add_index "comments", ["league"], name: "index_comments_on_league"
+  add_index "comments", ["news"], name: "index_comments_on_news"
   add_index "comments", ["song"], name: "index_comments_on_song"
+  add_index "comments", ["stairway"], name: "index_comments_on_stairway"
   add_index "comments", ["user"], name: "index_comments_on_user"
 
   create_table "contestants", force: :cascade do |t|
@@ -64,6 +68,16 @@ ActiveRecord::Schema.define(version: 20150701214506) do
 
   add_index "leagues", ["organizer_id"], name: "index_leagues_on_organizer_id"
 
+  create_table "news", force: :cascade do |t|
+    t.text     "content"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "title"
+  end
+
+  add_index "news", ["user_id"], name: "index_news_on_user_id"
+
   create_table "relationship_songs", force: :cascade do |t|
     t.integer  "relationship_id"
     t.integer  "song_id"
@@ -97,9 +111,33 @@ ActiveRecord::Schema.define(version: 20150701214506) do
     t.string   "description"
     t.string   "download_link"
     t.integer  "server_migs_dp_max"
+    t.integer  "creator"
   end
 
   add_index "songs", ["server_difficulty_name", "server_difficulty_number", "server_id"], name: "difficulty_index", unique: true
+
+  create_table "stairway_songs", force: :cascade do |t|
+    t.integer  "stairway_id"
+    t.integer  "song_id"
+    t.float    "rate"
+    t.float    "points"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "type_song"
+  end
+
+  add_index "stairway_songs", ["song_id"], name: "index_stairway_songs_on_song_id"
+  add_index "stairway_songs", ["stairway_id"], name: "index_stairway_songs_on_stairway_id"
+
+  create_table "stairways", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "description"
+  end
+
+  add_index "stairways", ["user_id"], name: "index_stairways_on_user_id"
 
   create_table "user_scores", force: :cascade do |t|
     t.integer  "server_marvelous"

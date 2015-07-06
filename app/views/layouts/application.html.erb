@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>RailsSm</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <title>Stepmania Players League</title>
+  <%= stylesheet_link_tag    'application' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
@@ -10,7 +10,6 @@
 
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
-    
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6">
         <span class="sr-only">Toggle navigation</span>
@@ -22,11 +21,11 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
       <ul class="nav navbar-nav">
-      	<li <% if current_page?(root_path) %>class="active"<% end %>><%= link_to 'Home',  root_path %></li>
-        <!-- <li><a href="#">About</a></li>
-        <li><a href="#">Songs</a></li> -->
+      	<li <% if controller_name == 'news' %>class="active"<% end %>><%= link_to 'Home',  root_path %></li>
         <li <% if controller_name == 'users' %>class="active"<% end %>><%= link_to 'Users',  users_path %></li>
+        <li <% if controller_name == 'songs' %>class="active"<% end %>><%= link_to 'Songs',  songs_path %></li>
         <li <% if controller_name == 'leagues' %>class="active"<% end %>><%= link_to 'Leagues',  leagues_path %></li>
+        <li <% if controller_name == 'stairways' %>class="active"<% end %>><%= link_to 'Stairways',  stairways_path %></li>
       </ul>
       <% if !user_signed_in? %>
       <ul class="nav navbar-nav navbar-right">
@@ -59,9 +58,21 @@
 			</div>
       <% if user_signed_in? %>
 			<div class="col-md-3">
-				<% if controller_name != 'registrations' and controller_name != 'sessions' %>
-				  <%= render 'devise/sessions/profile' %>
-				<% end %>
+        <div class="row">
+  				<% if controller_name != 'registrations' and controller_name != 'sessions' %>
+  				  <%= render 'devise/sessions/profile' %>
+  				<% end %>
+        </div>
+        <div class="row">
+          <center><h2>Chat</h2></center>
+        </div>
+        <div class ="container profile">
+          <div class="row chat center-block thu">
+            </br>
+            <iframe frameborder="0" width="100%" height="360" id="dd75400010000018157811953" src="http://st.chatango.com/h5/gz/r0705151629/iF.html?cid=0010000018157811953&amp;t=0&amp;v=0&amp;w=0&amp;ab=0&amp;ref=http://stepmaniaonline.net/index.php&amp;grpnm=smonet"></iframe><script id="cid0010000018157811953_" src="http://st.chatango.com/js/gz/emb.js" class="chat" async="" style="width: 100%; height: 360px; position: block;">{"handle":"smonet","styles":{"t":0,"v":0,"w":0,"ab":0}}</script><script id="sid0010000018157811953_">(function() {function async_load(){s.id="cid0010000018157811953";s.src='http://st.chatango.com/js/gz/emb.js';s.style.cssText="width:100%;height:360px;";s.async=true;s.text='{"handle":"smonet","styles":{"t":0,"v":0,"w":0,"ab":0}}';var ss = document.getElementsByTagName('script');for (var i=0, l=ss.length; i < l; i++){if (ss[i].id=='sid0010000018157811953'){ss[i].id +='_';ss[i].parentNode.insertBefore(s, ss[i]);break;}}}var s=document.createElement('script');if (s.async==undefined){if (window.addEventListener) {addEventListener('load',async_load,false);}else if (window.attachEvent) {attachEvent('onload',async_load);}}else {async_load();}})();</script>
+              </br>
+          </div>
+        </div>
 			</div>
       <% end %>
   		</div>

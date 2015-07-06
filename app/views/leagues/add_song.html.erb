@@ -1,5 +1,9 @@
-<div class="alert alert-success" role="alert"><p id="notice"><%= notice %></p>
-<p id="notice"><%= params[:notice] %></p></div>
+<% if notice != nil && notice != "" %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
 <h1>Administrar Canciones</h1>
 <h3>Liga: <%= @league.name %></h3>
 <h3>Canciones actuales: <%= @league_songs.count %></h3>
@@ -69,7 +73,8 @@
     <% end %>
   </tbody>
 </table>
-
 <br>
-<%= paginate @songs %>
+<div class="text-center">
+  <%= paginate @songs %>
+</div>
 <%= link_to 'Back', @league %>

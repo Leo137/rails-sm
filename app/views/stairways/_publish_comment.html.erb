@@ -1,0 +1,53 @@
+<div class="container">
+	<h2>Comments</h2>
+<% if @comments.count == 0 %>
+	<div class="container jumbotron">
+		<center><h3>No comments yet</h3></center>
+	</div>
+<% end %>
+<% @comments.each do |comment| %>
+	<div class="row">
+		<div class="col-sm-1">
+			<div class="thumbnail2">
+				<%= image_tag(ApplicationHelper.get_avatar_user(comment.author.name,1), :alt => "Profile Image", class: "image_user_small") %>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong><%= link_to comment.author.name, controller: "users", action: "show", id: comment.author.server_id %></strong><span class="text-muted"> (<%= comment.created_at.strftime('%I:%M %p')%>)</span>
+				</div>
+				<div class="panel-body">
+					<%= comment.comment %>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+		</div>
+	</div>
+<% end %>
+</div>
+<div class="text-center">
+  <%= paginate @comments %>
+</div>
+<% if can? :publish_comment_post, @stairway %>
+	<table class="table">
+		<tbody>
+			<tr class="row">
+				<td class="col-sm-1">
+					<%= image_tag(ApplicationHelper.get_avatar_user(current_user.name,1), :alt => "Profile Image", class: "image_user_small pull-left") %>
+				</td>
+				<td class="col-sm-2">
+					<%= form_tag(stairways_publish_comment_path, method: "post") do %>
+					<%= hidden_field_tag(:id, @stairway.id) %>
+					<%= text_area_tag :message, '', size: "40x2", placeholder: "Write a comment...", class: "input-group center pull-left" %>
+					</br></br></br>
+				    <%= submit_tag("Send", class: "btn btn-default pull-left") %>
+				    <% end %>
+				</td>
+				<td class="col-sm-9">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+<% end %>

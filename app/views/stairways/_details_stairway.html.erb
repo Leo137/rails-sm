@@ -1,0 +1,91 @@
+<% best = nil %>
+<% if @stairway.songs.count > 0 %>
+<h2>Songs</h2>
+	<table data-toggle="table">
+		  <thead>
+		    <tr>
+		    	<th>Song</th>
+		    	<th>Points</th>
+		    	<th>Score</th>
+		    </tr>
+		  </thead>
+		  <tbody style="height:210px">
+		  	<% @stairway_songs.order(points: :asc).each do |stairway_song| %>
+		  		<tr id="tr-id-1" class="tr-class-1">
+		  			<% song = stairway_song.song %>
+		  			<td id="td-id-1" class="td-class-1">
+		    			<%= link_to song.name, controller: "songs", action: "show", id: song.id %>
+		    		</br>
+		    			<small class="label label-default"><%= song.server_difficulty_name %> (<%= song.server_difficulty_number %>)</small>
+		    		</td>
+					<td>
+						<%= stairway_song.points %>
+					</td>
+					<% if current_user != nil %>
+						<% if song.server_migs_dp_max != nil %>
+							<% score = current_user.user_scores.where("song_id =? AND server_migs_dp_max >=?", song.id,song.server_migs_dp_max).order(server_migs_dp_obtained: :desc).first %>
+						<% else %>
+							<% score = current_user.user_scores.where("song_id =?", song.id).order(server_migs_dp_obtained: :desc).first %>
+						<% end %>
+			  			<% if score != nil %>
+				  		<td id="td-id-2" class="td-class-2">
+				      		<div class="center-block leaguecell">
+			      				<%= image_tag(ApplicationHelper.get_grade_image(score.server_grade), :alt => "", class: "center-block") %>
+			      				<center><%= link_to score.server_percent.round(1).to_s+"%", ApplicationHelper.get_match_server_url(score.server_id) %>
+			      				</center>
+			      				<% if score.server_grade > 4 %>
+			      					<% best = stairway_song.points %>
+			      					<small class="label label-success center-block">Sucess!</small>
+			      				<% else %>
+			      					<small class="label label-danger center-block">Fail</small>
+			      				<% end %>
+			      			</div>
+			      		</td>
+				  		<% else %>
+				  			<td id="td-id-1" class="td-class-1">--</td>
+				  		<% end %>
+			  		<% else %>
+			  			<td id="td-id-1" class="td-class-1">--</td>
+			  		<% end %>
+		  		</tr>
+		  	<% end %>
+		  </tbody>
+	</table>
+<% else %>
+	<h2>No Songs yet</h2></br>
+<% end %>
+<div class="text-center">
+  <%= paginate @stairway_songs %>
+</div>
+<h2>Best Stairway Record: <%= best != nil ? best : "--" %></h2>
+<% if @stairway.user == current_user %>
+	<%= form_tag(edit_stairway_path(@stairway), method: "get") do %>
+	  	<%= submit_tag("Manage stairway", class: "btn btn-default pull-left") %>
+	<% end %>
+	<span></span>
+	<%= form_tag(stairways_add_song_path, method: "get") do %>
+		<%= hidden_field_tag(:id, @stairway.id) %>
+	  	<%= submit_tag("Manage songs", class: "btn btn-default pull-left") %>
+	<% end %>
+<% end %>
+
+<% if current_user != nil %>
+	<%= form_tag(stairways_update_scores_path, method: "get") do %>
+	    <%= hidden_field_tag(:userid, current_user.id) %>
+	    <%= hidden_field_tag(:id, @stairway.id) %>
+	    <button type="submit" name="commit" data-loading-text="Loading..." class="btn btn-primary pull-right loading_btn">
+			Update scores
+		</button>
+		</br>
+		</br>
+	<% end %>
+<% else %>
+	<div class="container jumbotron">
+		<center><h3>You must be logged in to participate in this stairway</h3></center>
+	</div>
+<% end %>
+<script>
+  $('.loading_btn').on('click', function () {
+    var $btn = $(this).button('loading')
+  })
+</script>

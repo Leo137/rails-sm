@@ -20,6 +20,7 @@ class Ability
           can :publish_comment_post, :all
           can :publish_comment_delete, :all
           can :update_scores_get, :all
+          can :manage, Song, :creator => user
         end
     end
     user ||= User.new # guest user (not logged in)
@@ -27,6 +28,7 @@ class Ability
     can :show, :all
     can :index_rank, :all
     can :publish_comment_show, :all
+    can :ranking_show, :all
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

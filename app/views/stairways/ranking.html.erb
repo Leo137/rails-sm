@@ -1,0 +1,17 @@
+  <%= stylesheet_link_tag    'bootstrap-table.min', media: 'all', 'data-turbolinks-track' => false %>
+  <%= javascript_include_tag 'bootstrap-table-all-min', 'data-turbolinks-track' => false %>
+<% if notice != nil && notice != "" %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
+<%= render 'stairway_header' %>
+<ul class="nav nav-tabs">
+  <li role="presentation"><%= link_to "Information", controller: "stairways", action: "show", id: @stairway.id %></li>
+  <li role="presentation" class="active"><a href="#">Ranking</a></li>
+  <li role="presentation"><%= link_to "Messages", controller: "stairways", action: "publish_comment_show", id: @stairway.id %></li>
+</ul>
+<div class="thumbnail">
+<%= render 'ranking' %>
+</div>

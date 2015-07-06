@@ -26,6 +26,18 @@ body { padding-top: 5px; }
   border-radius: 4px;
   padding: 8px;
 }
+.thu {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.ruler_margin{
+  margin-top:4px;
+  margin-bottom:4px;
+}
+.container_news{
+  padding-bottom: 8px;
+}
 .container_profile{
   padding-top: 8px;
 }
@@ -92,13 +104,14 @@ body {
   width: 40px;
 }
 .profile{
-  @media screen and (min-width: 992px) {
-      position:fixed;
-      padding-right:10px;
-  }
-  padding-left:20px;
-  padding-right:20px;
-  width: 200px;
+  padding-left:10px;
+  padding-right:10px;
+  width: 250px;
+}
+.chat{
+  padding-left:12px;
+  padding-right:12px;
+  width: 100%;
 }
 .thumbnail2 {
     position:absolute;

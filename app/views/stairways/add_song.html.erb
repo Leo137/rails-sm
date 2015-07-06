@@ -1,0 +1,81 @@
+<% if notice != nil && notice != "" %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
+<h1>Administrar Canciones</h1>
+<h3>Stairway: <%= @stairway.name %></h3>
+<h3>Canciones actuales: <%= @stairway_songs.count %></h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Song</th>
+      <th>Points</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stairway_songs.each do |song| %>
+    <% @stairway_song = @stairway.stairway_songs.find_by song_id: song.id %>
+      <tr>
+        <td><%= link_to song.name, controller: "songs", action: "show", id: song.id %></td>
+        <td><%= @stairway_song.points %></td>
+        <td>
+        	<% if @stairway.user == current_user %>
+        		<%= form_tag(stairways_add_song_path, method: "put") do %>
+					<%= hidden_field_tag(:stairwaysongid, @stairway_song.id) %>
+  					<%= submit_tag("Editar", class: "btn btn-default pull-right") %>
+  					<div class="col-xs-4 pull-right">
+  						<%= select_tag(:type_song , options_for_select([["Stamina",1],["Speed",2],["Hybrid",3],["Jacking",4],["Other",5]],@stairway_song.type_song)) %>
+  					</div>
+  					<div class="col-xs-4 pull-right">
+  						<%= number_field_tag(:points,@stairway_song.points,step: 0.01, class: "form-control pull-right") %>
+  					</div>
+				<% end %>
+        	<% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+  	<% if @songs != nil %>
+	    <% @songs.each do |song| %>
+	      <tr>
+	        <td><%= song.name %></td>
+	        <td>
+	        	<% @s = @stairway_songs.find_by id: song.id %>
+	        	<% if @s == nil %>
+		        	<%= form_tag(stairways_add_song_path, method: "post") do %>
+						<%= hidden_field_tag(:stairwayid, @stairway.id) %>
+						<%= hidden_field_tag(:songid, song.id) %>
+					  	<%= submit_tag("Añadir cancion", class: "btn btn-default pull-right") %>
+					<% end %>
+				<% else %>
+					<%= form_tag(stairways_add_song_path, method: "delete") do %>
+						<%= hidden_field_tag(:stairwayid, @stairway.id) %>
+						<%= hidden_field_tag(:songid, song.id) %>
+					  	<%= submit_tag("Remover", class: "btn btn-default pull-right") %>
+					<% end %>
+				<% end %>
+	        </td>
+	      </tr>
+	    <% end %>
+    <% end %>
+  </tbody>
+</table>
+<br>
+<div class="text-center">
+  <%= paginate @songs %>
+</div>
+<%= link_to 'Back', @stairway %>

@@ -1,0 +1,10 @@
+<p id="notice"><%= notice %></p>
+<%= render 'stairway_header' %>
+<ul class="nav nav-tabs">
+  <li role="presentation"><%= link_to "Information", controller: "stairways", action: "show", id: @stairway.id %></li>
+  <li role="presentation"><%= link_to "Ranking", controller: "stairways", action: "ranking_show", id: @stairway.id %></li>
+  <li role="presentation" class="active"><a href="#">Messages</a></li>
+</ul>
+<div class="thumbnail">
+<%= render 'publish_comment' %>
+</div>

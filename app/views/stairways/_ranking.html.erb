@@ -1,0 +1,76 @@
+<% if @ranking.count > 0 %>
+<h2>Ranking</h2>
+	<table data-toggle="table">
+		  <thead>
+		    <tr>
+		    	<th>User</th>
+		    	<th>Song 1</th>
+		    	<th>Song 2</th>
+		    	<th>Song 3</th>
+		    	<th>Song 4</th>
+		    	<th>Average</th>
+		    </tr>
+		  </thead>
+		  <tbody style="height:210px">
+		  	<% @ranking.each do |rr| %>
+		  		<% user_server_id = rr[0] %>
+		  		<% ranking = rr[1] %>
+		  		<tr id="tr-id-1" class="tr-class-1">
+		  			<td id="td-id-1" class="td-class-1">
+		  				<% user = User.find_by server_id: user_server_id %>
+		  				<%= link_to user.name, controller: "users", action: "show", id: user.server_id %>
+		  			</td>
+			  		<% ranking["records"].each do |record| %>
+			  			<% song = Song.find_by server_id: record["server_id"] %>
+			  			<% score = UserScore.find_by server_id: record["match_id"] %>
+			  			<td id="td-id-1" class="td-class-1">
+			  				<div class="center-block">
+			  					<%= link_to song.name, controller: "songs", action: "show", id: song.id %> </br><small><%= link_to "("+score.server_percent.round(1).to_s+"%)", ApplicationHelper.get_match_server_url(score.server_id) %>, <%= record["points"] %>pts.</small>
+			      			</div>
+			  			</td>
+			  		<% end %>
+		  			<td id="td-id-1" class="td-class-1">
+		  				<%= ranking["averagepoints"] %>
+		  			</td>
+		  		</tr>
+		  	<% end %>
+		  </tbody>
+	</table>
+	</br>
+<% else %>
+	<h2>No Ranking yet</h2></br>
+<% end %>
+<div class="text-center">
+  <%= paginate @ranking %>
+</div>
+<% if @stairway.user == current_user %>
+	<%= form_tag(edit_stairway_path(@stairway), method: "get") do %>
+	  	<%= submit_tag("Manage stairway", class: "btn btn-default pull-left") %>
+	<% end %>
+	<span></span>
+	<%= form_tag(stairways_add_song_path, method: "get") do %>
+		<%= hidden_field_tag(:id, @stairway.id) %>
+	  	<%= submit_tag("Manage songs", class: "btn btn-default pull-left") %>
+	<% end %>
+<% end %>
+
+<% if current_user != nil %>
+	<%= form_tag(stairways_update_scores_path, method: "get") do %>
+	    <%= hidden_field_tag(:userid, current_user.id) %>
+	    <%= hidden_field_tag(:id, @stairway.id) %>
+	    <button type="submit" name="commit" data-loading-text="Loading..." class="btn btn-primary pull-right loading_btn">
+			Update scores
+		</button>
+		</br>
+		</br>
+	<% end %>
+<% else %>
+	<div class="container jumbotron">
+		<center><h3>You must be logged in to participate in this stairway</h3></center>
+	</div>
+<% end %>
+<script>
+  $('.loading_btn').on('click', function () {
+    var $btn = $(this).button('loading')
+  })
+</script>

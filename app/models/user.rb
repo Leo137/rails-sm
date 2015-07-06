@@ -62,4 +62,5 @@ class User < ActiveRecord::Base
 
   has_many :user_scores, :dependent => :delete_all
   has_many :comments,class_name:"Comment",foreign_key: "user", :dependent => :delete_all
+  has_many :created_songs,class_name:"Song",foreign_key: "creator", :dependent => :delete_all
 end

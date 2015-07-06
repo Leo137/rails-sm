@@ -1,0 +1,52 @@
+<% if notice != nil && notice != "" %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
+
+<h1>News</h1>
+<% @news.each do |news| %>
+<div class="thumbnail">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h2><%= news.title %></h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      Posted by <%= link_to news.user.name, controller: "users", action: "show", id: news.user.server_id %> at <%= news.created_at.in_time_zone.strftime('%A, %d %b %Y %H:%M:%S') %>
+    </div>
+    <hr>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container container_news">
+        <%= news.content %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <hr class="ruler_margin">
+    <div class="container">
+    <div class="col-sm-2 pull-left">
+      <% if can? :manage, news %>
+        <%= link_to 'Edit', edit_news_path(news) %> -
+        <%= link_to 'Destroy', news, method: :delete, data: { confirm: 'Are you sure?' } %>
+      <% end %>
+    </div>
+    <div class="col-sm-2 pull-right text-right">
+      <!--<%= link_to 'Show', news %>-->
+    </div>
+    </div>
+  </div>
+  
+</div>
+<% end %>
+<div class="text-center">
+  <%= paginate @news %>
+</div>
+<% if can? :manage, News %>
+  <%= link_to 'New News', new_news_path %>
+<% end %>

@@ -6,4 +6,5 @@ class Song < ActiveRecord::Base
   	validates :server_id, numericality: true
   	validates :server_difficulty_number, numericality: true
   	validates :server_migs_dp_max, numericality: true
+  	belongs_to :creator,class_name:"User",foreign_key: "creator"
 end

@@ -91,7 +91,7 @@
   </div>
   
   <div class="form-group">
-    <%= f.input :scoring_mode , collection: [1,2,3], default: 1, class: ''%>
+    <%= f.input :scoring_mode , collection: [["MigsDP Max obtained",1],["Exponential",2],["Misterkister",3]], default: 1, class: ''%>
   </div>
   <%= f.button :submit, class: 'btn-default pull-left' %>
 <% end %>

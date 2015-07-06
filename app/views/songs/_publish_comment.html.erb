@@ -27,7 +27,9 @@
 	</div>
 <% end %>
 </div>
-<%= paginate @comments %>
+<div class="text-center">
+  <%= paginate @comments %>
+</div>
 <% if can? :publish_comment_post, @song %>
 	<table class="table">
 		<tbody>

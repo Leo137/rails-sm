@@ -1,5 +1,18 @@
 Rails.application.routes.draw do
   
+  get 'stairways/add_song' => 'stairways#add_song_show'
+  get 'stairways/add_song/:page' => 'stairways#add_song_show'
+  post 'stairways/add_song' => 'stairways#add_song_post'
+  put 'stairways/add_song' => 'stairways#add_song_put'
+  delete 'stairways/add_song' => 'stairways#add_song_delete'
+  get 'stairways/update_scores' => 'stairways#update_scores_get'
+  get 'stairways/publish_comment' => 'stairways#publish_comment_show'
+  get 'stairways/publish_comment/:page' => 'stairways#publish_comment_show'
+  post 'stairways/publish_comment' => 'stairways#publish_comment_post'
+  get 'stairways/ranking' => 'stairways#ranking_show'
+  get 'stairways/ranking/:page' => 'stairways#ranking_show'
+  resources :stairways
+  resources :news
   get 'songs/update_score' => 'songs#update_score_get'
   get 'songs/publish_comment' => 'songs#publish_comment_show'
   get 'songs/publish_comment/:page' => 'songs#publish_comment_show'
@@ -61,7 +74,7 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-  root 'songs#index'
+  root 'news#index'
 
   get 'users' => 'users#index'
   get 'users/order/name' => 'users#index'
